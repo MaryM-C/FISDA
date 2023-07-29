@@ -2,4 +2,11 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+
+    <!-- color for imagepicker -->
+    <color name="ucrop_color_toolbar">#03A9F4</color>
+    <color name="ucrop_color_statusbar">#03A9F4</color>
+    <color name="ucrop_color_widget_active">#03A9F4</color>
+
 </resources>

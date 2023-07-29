@@ -1,15 +1,17 @@
 plugins {
     id 'com.android.application'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
 }
 
 android {
     namespace 'com.ccs114.fisda'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.ccs114.fisda"
-        minSdk 24
-        targetSdk 33
+        minSdk 21
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
@@ -26,14 +28,43 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    buildFeatures {
+        mlModelBinding true
+    }
+    aaptOptions {
+        noCompress "tflite"
+    }
 }
 
 dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+    //Firebase dependencies
+    implementation 'com.google.firebase:firebase-database:20.2.2'
+    implementation platform('com.google.firebase:firebase-bom:32.2.0')
+    implementation "com.google.firebase:firebase-ml-modeldownloader"
+    implementation "org.tensorflow:tensorflow-lite:2.4.0"
+    implementation 'com.google.firebase:firebase-analytics'
+
+    //image dependencies
+    implementation 'com.squareup.picasso:picasso:2.8'
+    implementation 'com.github.dhaval2404:imagepicker:2.1'
+
+    //tensorflow dependencies
+    implementation 'org.tensorflow:tensorflow-lite-support:0.1.0'
+    implementation 'org.tensorflow:tensorflow-lite-metadata:0.1.0'
+    implementation 'org.tensorflow:tensorflow-lite-gpu:2.3.0'
+
+
+    implementation 'com.google.firebase:firebase-ml-model-interpreter:22.0.4'
+    implementation 'com.google.firebase:firebase-crashlytics:18.4.0'
+
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
 }
+
