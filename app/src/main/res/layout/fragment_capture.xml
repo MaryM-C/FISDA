@@ -10,7 +10,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/tipsCard"
         android:layout_width="303dp"
-        android:layout_height="448dp"
+        android:layout_height="460dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp">
 
@@ -23,20 +23,18 @@
                 android:id="@+id/txtFishName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="TIPS"
-                android:textSize="30dp"
                 android:gravity="center"
-
-
-                />
+                android:text="TIPS"
+                android:textColor="#000000"
+                android:textSize="30dp" />
 
             <ImageView
                 android:id="@+id/imgFish"
                 android:layout_width="match_parent"
                 android:layout_height="135dp"
-                android:layout_marginRight="30dp"
                 android:layout_marginLeft="30dp"
-                />
+                android:layout_marginRight="30dp"
+                app:srcCompat="@drawable/ci_1" />
 
             <View
                 android:layout_width="250dp"
@@ -46,9 +44,100 @@
                 android:layout_marginLeft="28dp"
                 />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="2dp"
+                android:text="The following can lead to poor results"
+                android:textColor="#000000"
+                android:textSize="15dp" />
+
             <GridLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:columnCount="2"
+                android:rowCount="4">
+
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="142dp"
+                    android:layout_height="103dp"
+                    android:layout_row="0"
+                    android:layout_column="0"
+                    android:layout_columnWeight="1"
+                    android:layout_rowWeight="1"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/wrong_image_1"
+                    app:srcCompat="@drawable/wrong_image_1" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_row="1"
+                    android:layout_column="0"
+                    android:layout_gravity="center"
+                    android:text="Blurry"
+                    android:textColor="#000000" />
+
+                <ImageView
+                    android:id="@+id/imageView3"
+                    android:layout_width="142dp"
+                    android:layout_height="103dp"
+                    android:layout_row="0"
+                    android:layout_column="1"
+                    android:layout_marginLeft="5dp"
+                    android:src="@drawable/wrong_image_2"
+                    app:srcCompat="@drawable/wrong_image_2" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_row="1"
+                    android:layout_column="1"
+                    android:layout_gravity="center"
+                    android:text="Multiple species"
+                    android:textColor="#000000" />
+
+
+                <ImageView
+                    android:layout_width="142dp"
+                    android:layout_height="103dp"
+                    android:layout_row="2"
+                    android:layout_column="0"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/wrong_image_3"
+                    app:srcCompat="@drawable/wrong_image_3" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_row="3"
+                    android:layout_column="0"
+                    android:layout_gravity="center"
+                    android:text="Deteriorated"
+                    android:textAllCaps="false"
+                    android:textColor="#000000" />
+
+                <ImageView
+                    android:layout_width="142dp"
+                    android:layout_height="103dp"
+                    android:layout_row="2"
+                    android:layout_column="1"
+                    android:layout_marginLeft="5dp"
+                    android:src="@drawable/wrong_image_4"
+                    app:srcCompat="@drawable/wrong_image_4" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_row="3"
+                    android:layout_column="1"
+                    android:layout_gravity="center"
+                    android:text="Bad angle"
+                    android:textColor="#000000" />
 
             </GridLayout>
 
