@@ -30,6 +30,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.Arrays;
 
 import com.ccs114.fisda.ml.FishdaModelV1;
 
@@ -40,7 +41,7 @@ public class CaptureFragment extends Fragment {
     private static final int REQUEST_PICK_IMAGE = 1;
     private Button camera, gallery;
     private ImageView imageView;
-    private TextView result;
+    private TextView result, text1;
     private int imageSize = 224;
 
     @Nullable
@@ -53,6 +54,8 @@ public class CaptureFragment extends Fragment {
 
         result = view.findViewById(R.id.txtFishName);
         imageView = view.findViewById(R.id.imgFish);
+
+        text1 = view.findViewById(R.id.textView);
 
         camera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,22 +152,20 @@ public class CaptureFragment extends Fragment {
 
             float[] confidence = outputFeature0.getFloatArray();
 
-            // Find the index of the class with the biggest confidence
-            int maxPos = 0;
-            float maxConfidence = 0;
-            for (int i = 0; i<confidence.length; i++) {
-                if(confidence[i] > maxConfidence) {
-                    maxConfidence = confidence[i];
-                    maxPos  = i;
-                }
-            }
+            OutputHandler handler = new OutputHandler(confidence);
+            int [] top3 = handler.getTop3Predictions();
+            int max = handler.getMaxIndex();
+
+            Log.w("top3", Arrays.toString(top3));
 
             String[] classes = {"Big Head Carp", "Blackchin Tilapia", "Carp", "Catfish", "Climbing Perch",
                     "Freshwater Eel", "Goby", "Gold Fish", "Gourami", "Indian Carp", "Indio-Pacific Tarpon",
                     "Jaguar Guapote", "Janitor fish", "Knife fish", "Manila Catfish", "Milkfish",
                     "Mosquito Fish", "Mudfish", "Mullet", "Scat Fish", "Silver Barb", "Silver Carp",
                     "Silver Perch", "Tenpounder", "Tilapia"};
-            result.setText(classes[maxPos]);
+            result.setText(classes[max]);
+
+            text1.setText("Pred:"+classes[top3[0]]+","+classes[top3[1]]+","+classes[top3[2]]);
 
 
             // Releases model resources if no longer used.
