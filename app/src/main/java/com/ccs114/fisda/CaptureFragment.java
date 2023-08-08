@@ -1,7 +1,5 @@
 package com.ccs114.fisda;
 
-import static android.app.Activity.RESULT_OK;
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -34,14 +32,12 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import com.ccs114.fisda.ml.FishdaModelV1;
-import com.github.dhaval2404.imagepicker.ImagePicker;
 
 public class CaptureFragment extends Fragment {
 
     private static final int REQUEST_CAMERA_PERMISSION = 100;
     private static final int REQUEST_IMAGE_CAPTURE = 3;
     private static final int REQUEST_PICK_IMAGE = 1;
-
     private Button camera, gallery;
     private ImageView imageView;
     private TextView result;
@@ -62,11 +58,8 @@ public class CaptureFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                    // Open ImagePicker for camera capture
-                    ImagePicker.Companion.with(CaptureFragment.this)
-                            .cameraOnly()
-                            .cropSquare()
-                            .start();
+                    Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
                 } else {
                     requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
                 }
@@ -76,11 +69,8 @@ public class CaptureFragment extends Fragment {
         gallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Open ImagePicker for gallery selection
-                ImagePicker.Companion.with(CaptureFragment.this)
-                        .galleryOnly()
-                        .cropSquare()
-                        .start();
+                Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(galleryIntent, REQUEST_PICK_IMAGE);
             }
         });
 
@@ -89,37 +79,44 @@ public class CaptureFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("ActivityResult", "requestCode: " + requestCode);
+        Log.d("ActivityResult", "resultCode: " + resultCode);
 
-        if (resultCode == RESULT_OK && data != null) {
-            // Get the selected image URI from the "ImagePicker" library
-            Uri imageUri = data.getData();
+        if (resultCode == getActivity().RESULT_OK && data != null) {
+            Bitmap image = null;
 
-            try {
-                Bitmap image = MediaStore.Images.Media.getBitmap(requireContext().getContentResolver(), imageUri);
-
-                if (image != null) {
-                    // Save the image to a file
-                    String imagePath = saveImageToFile(image);
-
-                    // Update the ImageView with the image
-                    imageView.setImageBitmap(image);
-
-                    // Scale the image if needed
-                    image = ThumbnailUtils.extractThumbnail(image, imageSize, imageSize);
-
-                    // Classify the image
-                    classifyImage(image);
-                } else {
-                    Log.d("ActivityResult", "Failed to retrieve the image.");
+            if (requestCode == REQUEST_IMAGE_CAPTURE) {
+                // If requestCode is REQUEST_IMAGE_CAPTURE, it means the image was taken with the camera directly
+                image = (Bitmap) data.getExtras().get("data");
+            } else if (requestCode == REQUEST_PICK_IMAGE) {
+                // If the requestCode is REQUEST_PICK_IMAGE, it means the image was picked from the gallery
+                Uri dat = data.getData();
+                try {
+                    image = MediaStore.Images.Media.getBitmap(requireContext().getContentResolver(), dat);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+            }
+
+            if (image != null) {
+                // Save the image to a file
+                String imagePath = saveImageToFile(image);
+
+                // Update the ImageView with the image
+                imageView.setImageBitmap(image);
+
+                // Scale the image if needed
+                image = ThumbnailUtils.extractThumbnail(image, imageSize, imageSize);
+
+                // Classify the image
+                classifyImage(image);
+            } else {
+                Log.d("ActivityResult", "Failed to retrieve the image.");
             }
         }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
-
-
 
     private void classifyImage(Bitmap image) {
         try {
@@ -138,9 +135,9 @@ public class CaptureFragment extends Fragment {
             for(int i = 0; i < imageSize; i++) {
                 for(int j = 0; j< imageSize; j++) {
                     int val = intValues[pixel++];
-                    byteBuffer.putFloat(((val >> 16) & 0xFF) * (1.f / 1));
-                    byteBuffer.putFloat(((val >> 8) & 0xFF) * (1.f / 1));
-                    byteBuffer.putFloat((val >> 0xFF) * (1.f / 1));
+                    byteBuffer.putFloat(((val >> 16) & 0xFF) * (1.f / 255));
+                    byteBuffer.putFloat(((val >> 8) & 0xFF) * (1.f / 255));
+                    byteBuffer.putFloat((val >> 0xFF) * (1.f / 255));
                 }
             }
 
@@ -168,6 +165,7 @@ public class CaptureFragment extends Fragment {
                     "Mosquito Fish", "Mudfish", "Mullet", "Scat Fish", "Silver Barb", "Silver Carp",
                     "Silver Perch", "Tenpounder", "Tilapia"};
             result.setText(classes[maxPos]);
+
 
             // Releases model resources if no longer used.
             model.close();

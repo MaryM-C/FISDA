@@ -34,10 +34,6 @@ android {
     aaptOptions {
         noCompress "tflite"
     }
-    androidResources {
-        noCompress 'tflite'
-    }
-
 }
 
 dependencies {
