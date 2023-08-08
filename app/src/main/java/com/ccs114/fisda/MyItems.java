@@ -3,17 +3,15 @@ package com.ccs114.fisda;
 import android.widget.ImageView;
 
 public class MyItems {
+
     private final String CommonName, LocalName, Category, Image;
-
-
 
 
     public MyItems(String commonName, String localName, String category, String image) {
         CommonName = commonName;
         LocalName = localName;
         Category = category;
-        Image=image;
-
+        Image = image;
 
     }
 
@@ -34,3 +32,5 @@ public class MyItems {
     }
 
 }
+
+

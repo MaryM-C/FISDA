@@ -58,9 +58,6 @@ public class MainActivity extends AppCompatActivity{
         });
     }
 
-    private void showModelDownloadedToast() {
-        Toast.makeText(getApplicationContext(), "Model has been updated", Toast.LENGTH_SHORT).show();
-    }
 
 
 

@@ -112,15 +112,17 @@ public class HomeFragment extends Fragment {
 
                 for(DataSnapshot fishdata:snapshot.child("fishdata").getChildren()){
                     //check if the child exist
-                    if(fishdata.hasChild("Common Name") && fishdata.hasChild("Local Name") && fishdata.hasChild("Category") && fishdata.hasChild("Image")){
+
+                    if(fishdata.hasChild("CommonName") && fishdata.hasChild("LocalName") && fishdata.hasChild("Category") && fishdata.hasChild("Image")){
 
                         //getting fish details from Firebase Database and store into the list one by one
-                        final String getCommonName = fishdata.child("Common Name").getValue(String.class);
-                        final String getLocalName = fishdata.child("Local Name").getValue(String.class);
+                        final String getCommonName = fishdata.child("CommonName").getValue(String.class);
+                        final String getLocalName = fishdata.child("LocalName").getValue(String.class);
                         final String getCategory = fishdata.child("Category").getValue(String.class);
                         final String getImage = fishdata.child("Image").getValue(String.class);
 
-                        //Creating user items with fish details
+
+                        // Creating MyItems object with all attributes
                         MyItems myItems = new MyItems(getCommonName, getLocalName, getCategory, getImage);
 
                         //adding this to the list

@@ -63,14 +63,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 Intent intent = new Intent(context,  InformationFragment.class);
 
                 String commonName = myItems.getCommonName();
-                String localName = myItems.getLocalName();
-                String category = myItems.getCategory();
-                String image = myItems.getImage();
-
                 intent.putExtra("commonname", commonName);
-                intent.putExtra("localname", localName);
-                intent.putExtra("category", category);
-                intent.putExtra("image", image);
+
 
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
