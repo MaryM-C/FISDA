@@ -13,8 +13,8 @@
             android:padding="10dp">
 
             <ImageView
-                android:id="@+id/image2"
-                android:layout_width="394dp"
+                android:id="@+id/mainImage"
+                android:layout_width="match_parent"
                 android:layout_height="225dp"
                 tools:srcCompat="@tools:sample/avatars" />
 
@@ -32,7 +32,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -55,7 +56,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -78,7 +80,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -97,6 +100,53 @@
                     android:textSize="16sp" />
             </LinearLayout>
 
+            <!-- Edibility -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Edibility:"
+                    android:textSize="16sp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="5dp" />
+
+                <TextView
+                    android:id="@+id/lblEdibility"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Big Head Carp"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <!-- Category -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Category:"
+                    android:textSize="16sp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="5dp" />
+
+                <TextView
+                    android:id="@+id/lblCategory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Big Head Carp"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+            </LinearLayout>
 
 
             <!-- Taxonomy -->
@@ -113,7 +163,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -136,7 +187,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -159,7 +211,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -182,7 +235,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp"
+                >
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -205,12 +260,13 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Genus: "
+                    android:text="Scientific Name: "
                     android:textSize="16sp"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="5dp" />
@@ -221,7 +277,8 @@
                     android:layout_height="wrap_content"
                     android:text="Big Head Carp"
                     android:textColor="#000000"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textStyle="italic"/>
             </LinearLayout>
 
             <!-- Short description -->
@@ -240,6 +297,7 @@
                 android:text="The bighead carp has a large, scaleless head, a large mouth, and eyes located very low on the head Adults usually have a mottled silver-gray coloration"
                 android:textSize="16dp"
                 android:layout_marginLeft="15dp"
+                android:textColor="#000000"
                 />
 
             <!-- Biological information -->
@@ -251,54 +309,152 @@
                 android:textStyle="bold"
                 android:textSize="25sp"
                 />
-            <TextView
-                android:layout_marginTop="3dp"
+            <!-- Max Length -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Max Length: "
-                android:textSize="16dp"
-                android:layout_marginLeft="10dp"
-                />
-            <TextView
-                android:layout_marginTop="3dp"
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Max Length: "
+                    android:textSize="16sp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="5dp" />
+
+                <TextView
+                    android:id="@+id/lblMaxLength"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Big Head Carp"
+                    android:textColor="#000000"
+                    android:textSize="16sp"
+                    />
+            </LinearLayout>
+
+            <!-- Max Weight -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Max Weight: "
-                android:textSize="16dp"
-                android:layout_marginLeft="10dp"
-                />
-            <TextView
-                android:layout_marginTop="3dp"
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Max Weight: "
+                    android:textSize="16sp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="5dp" />
+
+                <TextView
+                    android:id="@+id/lblMaxWeight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Big Head Carp"
+                    android:textColor="#000000"
+                    android:textSize="16sp"
+                    />
+            </LinearLayout>
+
+            <!-- size -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Size: "
-                android:textSize="16dp"
-                android:layout_marginLeft="10dp"
-                />
-            <TextView
-                android:layout_marginTop="3dp"
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Size: "
+                    android:textSize="16sp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="5dp" />
+
+                <TextView
+                    android:id="@+id/lblSize"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Big Head Carp"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <!-- Environment -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Environment: "
-                android:textSize="16dp"
-                android:layout_marginLeft="10dp"
-                />
-            <TextView
-                android:layout_marginTop="3dp"
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Environment: "
+                    android:textSize="16sp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="5dp" />
+
+                <TextView
+                    android:id="@+id/lblEnvironment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Big Head Carp"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <!-- Temperature -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Temperature: "
-                android:textSize="16dp"
-                android:layout_marginLeft="10dp"
-                />
-            <TextView
-                android:layout_marginTop="3dp"
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Temperature: "
+                    android:textSize="16sp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="5dp" />
+
+                <TextView
+                    android:id="@+id/lblTemperature"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Big Head Carp"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <!-- Diet -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Diet: "
-                android:textSize="16dp"
-                android:layout_marginLeft="10dp"
-                />
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Diet: "
+                    android:textSize="16sp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="5dp" />
+
+                <TextView
+                    android:id="@+id/lblDiet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Big Head Carp"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
 
 
         </LinearLayout>
