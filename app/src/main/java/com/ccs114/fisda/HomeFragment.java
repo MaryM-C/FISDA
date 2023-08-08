@@ -56,10 +56,9 @@ public class HomeFragment extends Fragment {
         recyclerView.setLayoutManager(gridLayoutManager);
 
 
-
-
         // Fetch data from Firebase and update the dataList.
         fetchFirebaseData();
+
 
         SearchView searchView = view.findViewById(R.id.searchView);
         // Add a TextChangeListener to the SearchView
@@ -77,17 +76,12 @@ public class HomeFragment extends Fragment {
                 return true;
             }
         });
-
-
-
         return view;
     }
 
     private void filterData(String query) {
         // Create a new list to store filtered items based on the search query
         List<MyItems> filteredList = new ArrayList<>();
-
-
 
         // Loop through all items in the allItemsList and check if they match the search query
         for (MyItems item : allItemsList) {
@@ -98,7 +92,6 @@ public class HomeFragment extends Fragment {
                 filteredList.add(item);
             }
         }
-
         // Update the RecyclerView with the filtered data
         recyclerView.setAdapter(new MyAdapter(filteredList, getActivity()));
     }
