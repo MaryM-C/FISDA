@@ -17,9 +17,7 @@ public class InformationFragment extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.information_layout);
 
-
         String commonName = getIntent().getStringExtra("commonname");
-
 
         // Set the retrieved values to the respective TextViews and ImageView
         ImageView imageView = findViewById(R.id.mainImage);

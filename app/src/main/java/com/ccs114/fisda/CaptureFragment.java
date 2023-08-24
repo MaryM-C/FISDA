@@ -21,16 +21,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.Arrays;
 
 import com.ccs114.fisda.ml.FishdaModelV1;
 
@@ -105,14 +107,40 @@ public class CaptureFragment extends Fragment {
                 // Save the image to a file
                 String imagePath = saveImageToFile(image);
 
-                // Update the ImageView with the image
-                imageView.setImageBitmap(image);
-
-                // Scale the image if needed
                 image = ThumbnailUtils.extractThumbnail(image, imageSize, imageSize);
 
-                // Classify the image
-                classifyImage(image);
+                OutputHandler handler = classifyImage(image);
+                String[] topFishSpecies = handler.getTop3FishSpecies();
+                String[] topConfidences = handler.getConfidences();
+
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                image.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byte[] byteArray = stream.toByteArray();
+
+                // Create a bundle to pass data to the OutputFragment
+                Bundle args = new Bundle();
+                args.putByteArray("imagebytes", byteArray);
+                args.putStringArray("topFishSpecies", topFishSpecies);
+                args.putStringArray("topConfidences", topConfidences); // Implement this method
+                Log.d("Prediction", topFishSpecies[0]+ " " + topConfidences[0]);
+                Log.d("Test", "went here");
+
+                if (args != null) {
+                    for (String key : args.keySet()) {
+                        Object value = args.get(key);
+                        Log.d("BundleContents", key + ": " + value);
+                    }
+                }
+
+                // Create the OutputFragment and set the arguments
+                OutputFragment outputFragment = new OutputFragment();
+                outputFragment.setArguments(args);
+
+                FragmentManager manager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction transaction = manager.beginTransaction();
+                transaction.replace(R.id.container, outputFragment); // Replace 'R.id.container' with your fragment container ID
+                transaction.commit();
+
             } else {
                 Log.d("ActivityResult", "Failed to retrieve the image.");
             }
@@ -121,7 +149,8 @@ public class CaptureFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void classifyImage(Bitmap image) {
+    private OutputHandler classifyImage(Bitmap image) {
+        OutputHandler handler = null;
         try {
             FishdaModelV1 model = FishdaModelV1.newInstance(requireContext());
 
@@ -152,35 +181,23 @@ public class CaptureFragment extends Fragment {
 
             float[] confidence = outputFeature0.getFloatArray();
 
-            OutputHandler handler = new OutputHandler(confidence);
-            int [] top3 = handler.getTop3Predictions();
-            int max = handler.getMaxIndex();
-
-            Log.w("top3", Arrays.toString(top3));
-
-            String[] classes = {"Big Head Carp", "Blackchin Tilapia", "Carp", "Catfish", "Climbing Perch",
-                    "Freshwater Eel", "Goby", "Gold Fish", "Gourami", "Indian Carp", "Indio-Pacific Tarpon",
-                    "Jaguar Guapote", "Janitor fish", "Knife fish", "Manila Catfish", "Milkfish",
-                    "Mosquito Fish", "Mudfish", "Mullet", "Scat Fish", "Silver Barb", "Silver Carp",
-                    "Silver Perch", "Tenpounder", "Tilapia"};
-            result.setText(classes[max]);
-
-            text1.setText("Pred:"+classes[top3[0]]+","+classes[top3[1]]+","+classes[top3[2]]);
-
-
             // Releases model resources if no longer used.
             model.close();
+
+            handler = new OutputHandler(confidence);
+
         } catch (IOException e) {
             // TODO Handle the exception
         }
+        return handler;
     }
-
+    //TODO Capture images using Camera should save the image
     // Method to save the image to a file and return the file path
     private String saveImageToFile(Bitmap bitmap) {
         String imagePath = Environment.getExternalStorageDirectory() + File.separator + "image.jpg";
         try {
             FileOutputStream outputStream = new FileOutputStream(imagePath);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
             outputStream.flush();
             outputStream.close();
         } catch (IOException e) {

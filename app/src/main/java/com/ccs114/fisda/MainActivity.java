@@ -26,7 +26,7 @@ import org.tensorflow.lite.Interpreter;
 import java.io.File;
 
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigationView;
     HomeFragment homeFragment = new HomeFragment();
     CaptureFragment captureFragment = new CaptureFragment();
@@ -57,6 +57,8 @@ public class MainActivity extends AppCompatActivity{
             }
         });
     }
+
+
 
 
 

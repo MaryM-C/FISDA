@@ -2,6 +2,11 @@ package com.ccs114.fisda;
 
 public class OutputHandler {
     private float[] confidence;
+    private static final String[] fishSpeciesNames = {"Big Head Carp", "Blackchin Tilapia", "Carp", "Catfish", "Climbing Perch",
+            "Freshwater Eel", "Goby", "Gold Fish", "Gourami", "Indian Carp", "Indio-Pacific Tarpon",
+            "Jaguar Guapote", "Janitor fish", "Knife fish", "Manila Catfish", "Milkfish",
+            "Mosquito Fish", "Mudfish", "Mullet", "Scat Fish", "Silver Barb", "Silver Carp",
+            "Silver Perch", "Tenpounder", "Tilapia"};
 
     public OutputHandler(float[] confidence) {
         this.confidence = confidence;
@@ -49,6 +54,39 @@ public class OutputHandler {
         }
         return topIndices;
     }
+
+    public String[] getTop3FishSpecies() {
+        int[] topIndices = getTop3Predictions();
+        String[] topFishSpecies = new String[3];
+        for (int i = 0; i < topFishSpecies.length; i++) {
+            topFishSpecies[i] = fishSpeciesNames[topIndices[i]];
+        }
+        return topFishSpecies;
+    }
+
+    private float[] getTop3Confidences() {
+        int[] topIndices = getTop3Predictions();
+        float[] topConfidences = new float[3];
+        for (int i = 0; i < topConfidences.length; i++) {
+            topConfidences[i] = confidence[topIndices[i]];
+        }
+        return topConfidences;
+    }
+
+    public String[] getConfidences() {
+        int[] topIndices = getTop3Predictions();
+        String[] formattedConfidences = new String[3];
+
+        for (int i = 0; i < formattedConfidences.length; i++) {
+            float confidenceValue = confidence[topIndices[i]] * 100; // Multiply by 100 for percentage
+            formattedConfidences[i] = String.format("%.2f", confidenceValue); // Format to two decimal places
+        }
+
+        return formattedConfidences;
+    }
+
+
+
 
 
 }
