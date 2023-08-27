@@ -1,5 +1,10 @@
 package com.ccs114.fisda;
 
+/**
+ * This file handles image selection by the user and sending it to the model to be classified
+ * to identify the fish classification
+ */
+
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,24 +21,21 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-
+// the modified model
 import com.ccs114.fisda.ml.FishdaModelV1;
 
 public class CaptureFragment extends Fragment {
@@ -43,8 +45,8 @@ public class CaptureFragment extends Fragment {
     private static final int REQUEST_PICK_IMAGE = 1;
     private Button camera, gallery;
     private ImageView imageView;
-    private TextView result, text1;
-    private int imageSize = 224;
+    private TextView result;
+    private final int imageSize = 224;
 
     @Nullable
     @Override
@@ -56,8 +58,6 @@ public class CaptureFragment extends Fragment {
 
         result = view.findViewById(R.id.txtFishName);
         imageView = view.findViewById(R.id.imgFish);
-
-        text1 = view.findViewById(R.id.textView);
 
         camera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,25 +121,14 @@ public class CaptureFragment extends Fragment {
                 Bundle args = new Bundle();
                 args.putByteArray("imagebytes", byteArray);
                 args.putStringArray("topFishSpecies", topFishSpecies);
-                args.putStringArray("topConfidences", topConfidences); // Implement this method
-                Log.d("Prediction", topFishSpecies[0]+ " " + topConfidences[0]);
-                Log.d("Test", "went here");
-
-                if (args != null) {
-                    for (String key : args.keySet()) {
-                        Object value = args.get(key);
-                        Log.d("BundleContents", key + ": " + value);
-                    }
-                }
+                args.putStringArray("topConfidences", topConfidences);
+                logBundleContents(args);
 
                 // Create the OutputFragment and set the arguments
                 OutputFragment outputFragment = new OutputFragment();
                 outputFragment.setArguments(args);
 
-                FragmentManager manager = requireActivity().getSupportFragmentManager();
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.replace(R.id.container, outputFragment); // Replace 'R.id.container' with your fragment container ID
-                transaction.commit();
+                displayOutput(outputFragment);
 
             } else {
                 Log.d("ActivityResult", "Failed to retrieve the image.");
@@ -191,8 +180,9 @@ public class CaptureFragment extends Fragment {
         }
         return handler;
     }
-    //TODO Capture images using Camera should save the image
     // Method to save the image to a file and return the file path
+    //TODO Capture images using Camera should save the image
+
     private String saveImageToFile(Bitmap bitmap) {
         String imagePath = Environment.getExternalStorageDirectory() + File.separator + "image.jpg";
         try {
@@ -204,5 +194,19 @@ public class CaptureFragment extends Fragment {
             e.printStackTrace();
         }
         return imagePath;
+    }
+
+    private void logBundleContents(Bundle args) {
+        for (String key : args.keySet()) {
+            Object value = args.get(key);
+            Log.d("BundleContents", key + ": " + value);
+        }
+    }
+
+    private void displayOutput(OutputFragment outputFragment) {
+        FragmentManager manager = requireActivity().getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.container, outputFragment);
+        transaction.commit();
     }
 }
