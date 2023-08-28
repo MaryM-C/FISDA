@@ -13,7 +13,7 @@ public class OutputHandler {
     private final float[] confidence;
     private static final String[] fishSpeciesNames = {"Big Head Carp", "Blackchin Tilapia", "Carp", "Catfish", "Climbing Perch",
             "Freshwater Eel", "Goby", "Gold Fish", "Gourami", "Indian Carp", "Indio-Pacific Tarpon",
-            "Jaguar Guapote", "Janitor fish", "Knife fish", "Manila Catfish", "Milkfish",
+            "Jaguar Guapote", "Janitor Fish", "Knife Fish", "Manila Catfish", "Milkfish",
             "Mosquito Fish", "Mudfish", "Mullet", "Scat Fish", "Silver Barb", "Silver Carp",
             "Silver Perch", "Tenpounder", "Tilapia"};
 
