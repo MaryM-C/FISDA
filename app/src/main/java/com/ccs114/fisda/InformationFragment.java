@@ -61,8 +61,7 @@ public class InformationFragment extends AppCompatActivity {
                 environmentView.setText(fish.getEnvironment());
                 tempTextView.setText(fish.getTemperature());
                 dietTextView.setText(fish.getDiet());
-
-
+                Picasso.get().load(fish.getMainImage()).into(imageView);
             }
 
             @Override
@@ -77,11 +76,6 @@ public class InformationFragment extends AppCompatActivity {
             }
         });
 
-
-
-        //lblCommonNameTextView.setText(commonName);
-        //localNameTextView.setText(localName);
-        //categoryTextView.setText(category);
 
         // Load the image using Picasso from the web
         //Picasso.get().load(image).resize(250, 250).into(imageView);
