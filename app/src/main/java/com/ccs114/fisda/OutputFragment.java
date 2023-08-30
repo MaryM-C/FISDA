@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 public class OutputFragment extends Fragment {
     FishDataManager fishDataManager = new FishDataManager();
@@ -150,11 +151,11 @@ public class OutputFragment extends Fragment {
             closeBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // Get the FragmentManager
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-
-                    // Pop the current fragment from the back stack
-                    fragmentManager.popBackStack();
+                    CaptureFragment captureFragment = new CaptureFragment();
+                    FragmentManager manager = requireActivity().getSupportFragmentManager();
+                    FragmentTransaction transaction = manager.beginTransaction();
+                    transaction.replace(R.id.container, captureFragment);
+                    transaction.commit();
                 }
             });
         }
