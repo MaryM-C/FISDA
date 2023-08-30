@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clickable="true"
+
     tools:layout_editor_absoluteY="25dp">
 
     <ScrollView
@@ -92,6 +93,7 @@
                 android:layout_marginTop="156dp"
                 android:layout_marginEnd="8dp"
                 android:text="00.00 %"
+                android:textAlignment="viewEnd"
                 android:textSize="32sp"
                 app:layout_constrainedWidth="false"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -159,6 +161,15 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="TextView" />
+
+                <ImageButton
+                    android:id="@+id/btnBack"
+                    android:layout_width="55dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="16dp"
+                    app:srcCompat="?attr/actionModeCloseDrawable"
+                    tools:ignore="SpeakableTextPresentCheck" />
             </LinearLayout>
 
             <!--Local Name-->

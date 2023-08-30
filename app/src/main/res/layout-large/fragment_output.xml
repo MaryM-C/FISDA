@@ -147,6 +147,15 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="TextView" />
+
+                <ImageButton
+                    android:id="@+id/btnBack"
+                    android:layout_width="55dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="16dp"
+                    app:srcCompat="?attr/actionModeCloseDrawable"
+                    tools:ignore="SpeakableTextPresentCheck" />
             </LinearLayout>
 
             <LinearLayout
@@ -222,8 +231,6 @@
                     android:layout_weight="1"
                     android:text="TextView" />
             </LinearLayout>
-
-            <!--Local Name-->
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,11 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 public class OutputFragment extends Fragment {
     FishDataManager fishDataManager = new FishDataManager();
@@ -26,6 +28,8 @@ public class OutputFragment extends Fragment {
     private Button topTwo;
 
     private Button topThree;
+
+    private ImageButton closeBtn;
 
 
     @Override
@@ -49,6 +53,7 @@ public class OutputFragment extends Fragment {
             topOne = view.findViewById(R.id.btnResultOne);
             topTwo = view.findViewById(R.id.btnResultTwo);
             topThree = view.findViewById(R.id.btnResultThree);
+            closeBtn = view.findViewById(R.id.btnBack);
 
 
             displayImage(imageView, args);
@@ -139,6 +144,17 @@ public class OutputFragment extends Fragment {
                             Toast.makeText(getContext(), "Fish data not found." + errorMessage, Toast.LENGTH_SHORT).show();
                         }
                     });
+                }
+            });
+
+            closeBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // Get the FragmentManager
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+
+                    // Pop the current fragment from the back stack
+                    fragmentManager.popBackStack();
                 }
             });
         }

@@ -126,6 +126,15 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imgFishSpecies" />
 
+            <ImageButton
+                android:id="@+id/btnBack"
+                android:layout_width="55dp"
+                android:layout_height="50dp"
+                app:srcCompat="?attr/actionModeCloseDrawable"
+                tools:ignore="SpeakableTextPresentCheck"
+                tools:layout_editor_absoluteX="320dp"
+                tools:layout_editor_absoluteY="675dp" />
+
             <LinearLayout
                 android:id="@+id/linearLayout"
                 android:layout_width="720dp"
@@ -232,8 +241,6 @@
                     android:text="TextView"
                     android:textSize="32sp" />
             </LinearLayout>
-
-            <!--Local Name-->
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
