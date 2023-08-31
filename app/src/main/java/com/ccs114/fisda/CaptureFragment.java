@@ -107,9 +107,9 @@ public class CaptureFragment extends Fragment {
                 // Save the image to a file
                 String imagePath = saveImageToFile(image);
 
-                image = ThumbnailUtils.extractThumbnail(image, imageSize, imageSize);
+                Bitmap testImage = ThumbnailUtils.extractThumbnail(image, imageSize, imageSize);
 
-                OutputHandler handler = classifyImage(image);
+                OutputHandler handler = classifyImage(testImage);
                 String[] topFishSpecies = handler.getTop3FishSpecies();
                 String[] topConfidences = handler.getConfidences();
 

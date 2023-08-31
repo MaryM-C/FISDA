@@ -3,6 +3,7 @@ package com.ccs114.fisda;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,7 +21,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 public class OutputFragment extends Fragment {
     FishDataManager fishDataManager = new FishDataManager();
-    private ImageView imageView;
+    private ImageView imageView, refImage;
     private TextView englishName, comName, localName,edibility;
     private TextView confidenceView;
 
@@ -55,9 +56,16 @@ public class OutputFragment extends Fragment {
             topTwo = view.findViewById(R.id.btnResultTwo);
             topThree = view.findViewById(R.id.btnResultThree);
             closeBtn = view.findViewById(R.id.btnBack);
+            refImage = view.findViewById(R.id.imgFishSpecies);
 
 
-            displayImage(imageView, args);
+            //button
+            topOne.setEnabled(false);
+            //Image from the user
+            displayImage(imageView, refImage, args);
+
+            //TODO Add the image from the Firebase here
+
 
 
             fishDataManager.getFishData(topFishSpecies[0], new FishDataManager.FishDataListener() {
@@ -68,6 +76,8 @@ public class OutputFragment extends Fragment {
                     englishName.setText(fish.getEnglishName());
                     localName.setText(fish.getLocalName());
                     edibility.setText(fish.getEdibility());
+
+
                 }
                 public void onFishDataNotFound() {
                     Toast.makeText(getContext(), "Fish data not found.", Toast.LENGTH_SHORT).show();
@@ -112,6 +122,7 @@ public class OutputFragment extends Fragment {
                             englishName.setText(fish.getEnglishName());
                             localName.setText(fish.getLocalName());
                             edibility.setText(fish.getEdibility());
+                            topOne.setEnabled(true);
                         }
                         public void onFishDataNotFound() {
                             Toast.makeText(getContext(), "Fish data not found.", Toast.LENGTH_SHORT).show();
@@ -136,6 +147,7 @@ public class OutputFragment extends Fragment {
                             englishName.setText(fish.getEnglishName());
                             localName.setText(fish.getLocalName());
                             edibility.setText(fish.getEdibility());
+                            topOne.setEnabled(true);
                         }
                         public void onFishDataNotFound() {
                             Toast.makeText(getContext(), "Fish data not found.", Toast.LENGTH_SHORT).show();
@@ -164,11 +176,15 @@ public class OutputFragment extends Fragment {
         return view;
     }
 
-    private void displayImage(ImageView imageView, Bundle args) {
+    private void displayImage(ImageView imageView, ImageView refImage,  Bundle args) {
         byte[] byteArray = args.getByteArray("imagebytes");
         if(byteArray != null) {
             Bitmap image = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
             imageView.setImageBitmap(image);
+            //TODO
+            /*delete if the image from the Firebase is added*/
+            Bitmap thumbnail = ThumbnailUtils.extractThumbnail(image, 370, 200);
+            refImage.setImageBitmap(thumbnail);
         }
     }
 
