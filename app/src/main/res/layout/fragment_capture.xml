@@ -11,6 +11,7 @@
         android:id="@+id/tipsCard"
         android:layout_width="303dp"
         android:layout_height="460dp"
+        android:layout_centerInParent="false"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp">
 
@@ -148,9 +149,9 @@
 
     <!--Camera and Gallery Buttons-->
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="98dp"
+        android:layout_height="121dp"
         android:layout_alignWithParentIfMissing="false"
         android:layout_below="@+id/tipsCard"
         android:layout_alignParentLeft="false"
@@ -158,32 +159,44 @@
         android:layout_alignParentRight="false"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="12dp"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/btnCamera"
-            android:layout_width="141dp"
+            android:layout_width="140dp"
             android:layout_height="60dp"
-            android:layout_marginStart="52dp"
-            android:layout_marginTop="14dp"
-            android:layout_marginEnd="13dp"
+            android:layout_marginStart="56dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
             android:text="@string/camera"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/btnGallery"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_conversion_absoluteHeight="60dp"
+            tools:layout_conversion_absoluteWidth="141dp" />
 
         <Button
             android:id="@+id/btnGallery"
-            android:layout_width="141dp"
+            android:layout_width="140dp"
             android:layout_height="60dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="14dp"
-            android:layout_marginEnd="52dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="56dp"
             android:text="@string/gallery"
             android:textSize="20sp"
-            android:textStyle="bold" />
-    </LinearLayout>
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/btnCamera"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_conversion_absoluteHeight="60dp"
+            tools:layout_conversion_absoluteWidth="141dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </RelativeLayout>
