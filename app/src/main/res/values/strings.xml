@@ -1,7 +1,36 @@
 <resources>
     <string name="app_name">FisDA</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--Fish Information Labels-->
+    <string name="basic_information">Basic Information</string>
+    <string name="english_name">English Name:</string>
+    <string name="common_name">Common Name:</string>
+    <string name="local_name">Local Name:</string>
+    <string name="edibility">Edibility:</string>
+    <string name="category">Category:</string>
+
+    <string name="taxonomy">Taxonomy</string>
+    <string name="strClass">Class:</string>
+    <string name="order">Order:</string>
+    <string name="family">Family:</string>
+    <string name="genus">Genus:</string>
+    <string name="scientific_name">Scientific Name:</string>
+
+    <string name="short_description">Short Description</string>
+
+    <string name="biological_information">Biological Information</string>
+    <string name="max_weight">Max. Weight:</string>
+    <string name="max_length">Max. Length:</string>
+    <string name="temperature">Temperature:</string>
+    <string name="environment">Environment:</string>
+    <string name="size">Size:</string>
+    <string name="diet">Diet:</string>
+
+    <!--Button Labels-->
     <string name="camera">Camera</string>
     <string name="gallery">Gallery</string>
+    <string name="btnResultOne">1</string>
+    <string name="btnResulTwo">2</string>
+    <string name="btnResultThree">3</string>
 </resources>
