@@ -8,6 +8,10 @@ android {
     namespace 'com.ccs114.fisda'
     compileSdk 34
 
+    lint {
+        baseline = file("line-baseline.xml")
+    }
+
     defaultConfig {
         applicationId "com.ccs114.fisda"
         minSdk 21
@@ -30,6 +34,7 @@ android {
     }
     buildFeatures {
         mlModelBinding true
+        dataBinding true
     }
     aaptOptions {
         noCompress "tflite"
