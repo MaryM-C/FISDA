@@ -125,14 +125,14 @@
                 app:layout_constraintTop_toBottomOf="@+id/imgFishSpecies" />
 
             <LinearLayout
-                android:id="@+id/linearLayout2"
+                android:id="@+id/llCategory"
                 android:layout_width="382dp"
                 android:layout_height="24dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="15dp"
                 android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+                app:layout_constraintTop_toBottomOf="@+id/llEnglish">
 
                 <TextView
                     android:id="@+id/textView7"
@@ -151,14 +151,14 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/linearLayout3"
+                android:id="@+id/llLocal"
                 android:layout_width="382dp"
                 android:layout_height="24dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="15dp"
                 android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+                app:layout_constraintTop_toBottomOf="@+id/llCategory">
 
                 <TextView
                     android:id="@+id/textView9"
@@ -182,7 +182,7 @@
                 android:layout_marginTop="16dp"
                 android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
+                app:layout_constraintTop_toBottomOf="@+id/llLocal">
 
                 <TextView
                     android:id="@+id/textView11"
@@ -200,7 +200,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/linearLayout"
+                android:id="@+id/llEnglish"
                 android:layout_width="382dp"
                 android:layout_height="24dp"
                 android:layout_marginStart="16dp"
