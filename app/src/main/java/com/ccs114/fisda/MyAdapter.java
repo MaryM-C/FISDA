@@ -70,8 +70,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 context.startActivity(intent);
             }
 
-
-
         });
 
 
@@ -87,7 +85,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     static class MyViewHolder extends RecyclerView.ViewHolder {
         //declaring 3 textviews
         ImageView image;
-        private final TextView lblCommonName, commonName, localName, category;
+        private final TextView commonName, localName, category;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -96,8 +94,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             localName=itemView.findViewById(R.id.localName);
             category=itemView.findViewById(R.id.category);
             image=itemView.findViewById(R.id.image);
-            lblCommonName=itemView.findViewById(R.id.lblCommonName);
-;
 
         }
 
