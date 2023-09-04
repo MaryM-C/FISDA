@@ -1,67 +1,34 @@
 package com.ccs114.fisda;
 
 import androidx.appcompat.app.AppCompatActivity;
-
+import androidx.databinding.DataBindingUtil;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
-
+import com.ccs114.fisda.databinding.InformationLayoutBinding;
 import com.squareup.picasso.Picasso;
 
 public class InformationFragment extends AppCompatActivity {
-
+    InformationLayoutBinding bindData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.information_layout);
+        bindData = DataBindingUtil.setContentView(this, R.layout.information_layout);
 
         String commonName = getIntent().getStringExtra("commonname");
-
-        // Set the retrieved values to the respective TextViews and ImageView
-        ImageView imageView = findViewById(R.id.mainImage);
-        TextView commonNameTextView = findViewById(R.id.lblCommonName);
-        TextView localNameTextView = findViewById(R.id.lblLocalName);
-        TextView categoryTextView = findViewById(R.id.lblCategory);
-        TextView englishNameTextView = findViewById(R.id.lblEnglish);
-        TextView edibilityTextView = findViewById(R.id.lblEdibility);
-        TextView classTextView = findViewById(R.id.lblClass);
-        TextView orderTextView = findViewById(R.id.lblOrder);
-        TextView familyTextView = findViewById(R.id.lblFamily);
-        TextView genusTextView = findViewById(R.id.lblGenus);
-        TextView scientificnameTextView = findViewById(R.id.lblScientificName);
-        TextView sdrescriptionTextView = findViewById(R.id.shortDescription);
-        TextView mlengthTextView = findViewById(R.id.lblMaxLength);
-        TextView mweightTextView = findViewById(R.id.lblMaxWeight);
-        TextView sizeView = findViewById(R.id.lblSize);
-        TextView environmentView = findViewById(R.id.lblEnvironment);
-        TextView tempTextView = findViewById(R.id.lblTemperature);
-        TextView dietTextView = findViewById(R.id.lblDiet);
-
 
         FishDataManager fishDataManager = new FishDataManager();
         fishDataManager.getFishData(commonName, new FishDataManager.FishDataListener() {
             @Override
             public void onFishDataLoaded(Fish fish) {
-                commonNameTextView.setText(fish.getCommonName());
-                localNameTextView.setText(fish.getLocalName());
-                categoryTextView.setText(fish.getCategory());
-                englishNameTextView.setText(fish.getEnglishName());
-                edibilityTextView.setText(fish.getEdibility());
-                classTextView.setText(fish.getTClass());
-                orderTextView.setText(fish.getOrder());
-                familyTextView.setText(fish.getFamily());
-                genusTextView.setText(fish.getGenus());
-                scientificnameTextView.setText(fish.getScientificName());
-                sdrescriptionTextView.setText(fish.getShortDescription());
-                mlengthTextView.setText(fish.getMaxLength());
-                mweightTextView.setText(fish.getMaxWeight());
-                sizeView.setText(fish.getSize());
-                environmentView.setText(fish.getEnvironment());
-                tempTextView.setText(fish.getTemperature());
-                dietTextView.setText(fish.getDiet());
-                Picasso.get().load(fish.getMainImage()).into(imageView);
+
+                displayBasicInfo(bindData, fish);
+                displayTaxonomy(bindData, fish);
+                bindData.scrlInfo.setShortDescription(fish.getShortDescription());
+                displayBioInfo(bindData, fish);
+
+                Picasso.get().load(fish.getMainImage()).into(bindData.mainImage);
             }
 
             @Override
@@ -74,6 +41,36 @@ public class InformationFragment extends AppCompatActivity {
             public void onFishDataError(String errorMessage) {
                 Toast.makeText(getApplicationContext(), "Fish data not found."+ errorMessage, Toast.LENGTH_SHORT).show();
             }
+
+            private void displayBasicInfo(InformationLayoutBinding bindData, Fish fish) {
+                bindData.scrlInfo.setEnglishName(fish.getEnglishName());
+                bindData.scrlInfo.setLocalName(fish.getLocalName());
+                bindData.scrlInfo.setCommonName(fish.getCommonName());
+                bindData.scrlInfo.setEdibility(fish.getEdibility());
+                bindData.scrlInfo.setCategory(fish.getCategory());
+            }
+
+            private void displayTaxonomy(InformationLayoutBinding bindData, Fish fish) {
+                bindData.scrlInfo.setVarClass(fish.getTClass());
+                bindData.scrlInfo.setOrder(fish.getOrder());
+                bindData.scrlInfo.setFamily(fish.getFamily());
+                bindData.scrlInfo.setGenus(fish.getGenus());
+                bindData.scrlInfo.setSciName(fish.getScientificName());
+            }
+
+            private void displayBioInfo(InformationLayoutBinding bindData, Fish fish) {
+                bindData.scrlInfo.setMaxLength(fish.getMaxLength());
+                bindData.scrlInfo.setMaxWeight(fish.getMaxWeight());
+                bindData.scrlInfo.setSize(fish.getSize());
+                bindData.scrlInfo.setEnvironment(fish.getEnvironment());
+                bindData.scrlInfo.setTemperature(fish.getTemperature());
+                bindData.scrlInfo.setDiet(fish.getDiet());
+            }
+        });
+
+        bindData.btnBack.setOnClickListener(view14 -> {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
         });
 
 
