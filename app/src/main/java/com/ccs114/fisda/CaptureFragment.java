@@ -61,7 +61,7 @@ public class CaptureFragment extends Fragment {
         Button camera = view.findViewById(R.id.btnCamera);
         Button gallery = view.findViewById(R.id.btnGallery);
 
-        TextView result = view.findViewById(R.id.txtFishName);
+//        TextView result = view.findViewById(R.id.txtFishName);
         ImageView imageView = view.findViewById(R.id.imgFish);
 
         camera.setOnClickListener(view1 -> {
@@ -209,7 +209,7 @@ public class CaptureFragment extends Fragment {
     }
 
     /**
-     * Serves the user-selected image to a file and returns the file's new path
+     * Saves the user-selected image to a file and returns the file's new path
      *
      * @param bitmap The image selected by the user
      * @return a String containing the new file path of the image captured from the camera
