@@ -14,9 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -31,6 +28,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+
+import androidx.databinding.DataBindingUtil;
+import com.ccs114.fisda.databinding.FragmentCaptureBinding;
 
 // the modified model
 import com.ccs114.fisda.ml.FishdaModelV1;
@@ -56,15 +56,12 @@ public class CaptureFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_capture, container, false);
+        FragmentCaptureBinding bindData =
+                DataBindingUtil.inflate(inflater, R.layout.fragment_capture,  container, false);
 
-        Button camera = view.findViewById(R.id.btnCamera);
-        Button gallery = view.findViewById(R.id.btnGallery);
+        View view = bindData.getRoot();
 
-//        TextView result = view.findViewById(R.id.txtFishName);
-        ImageView imageView = view.findViewById(R.id.imgFish);
-
-        camera.setOnClickListener(view1 -> {
+        bindData.btnCamera.setOnClickListener(view1 -> {
             //Asks permission to launch the camera
             if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                 Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -74,7 +71,7 @@ public class CaptureFragment extends Fragment {
             }
         });
 
-        gallery.setOnClickListener(view12 -> {
+        bindData.btnGallery.setOnClickListener(view12 -> {
             //Launches Gallery
             Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(galleryIntent, REQUEST_PICK_IMAGE);

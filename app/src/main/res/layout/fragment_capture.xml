@@ -1,202 +1,202 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/captureContainer"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".CaptureFragment">
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/tipsCard"
-        android:layout_width="303dp"
-        android:layout_height="460dp"
-        android:layout_centerInParent="false"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/txtFishName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="TIPS"
-                android:textColor="#000000"
-                android:textSize="30sp" />
-
-            <ImageView
-                android:id="@+id/imgFish"
-                android:layout_width="match_parent"
-                android:layout_height="135dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                app:srcCompat="@drawable/ci_1" />
-
-            <View
-                android:layout_width="250dp"
-                android:layout_height="2dp"
-                android:layout_marginLeft="28dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/black" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:padding="2dp"
-                android:text="The following can lead to poor results"
-                android:textColor="#000000"
-                android:textSize="16sp" />
-
-            <GridLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:columnCount="2"
-                android:rowCount="4">
-
-
-                <ImageView
-                    android:id="@+id/imageView2"
-                    android:layout_width="142dp"
-                    android:layout_height="103dp"
-                    android:layout_row="0"
-                    android:layout_rowWeight="1"
-                    android:layout_column="0"
-                    android:layout_columnWeight="1"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="10dp"
-                    android:src="@drawable/wrong_image_1"
-                    app:srcCompat="@drawable/wrong_image_1" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_row="1"
-                    android:layout_column="0"
-                    android:layout_gravity="center"
-                    android:text="Blurry"
-                    android:textColor="#000000" />
-
-                <ImageView
-                    android:id="@+id/imageView3"
-                    android:layout_width="142dp"
-                    android:layout_height="103dp"
-                    android:layout_row="0"
-                    android:layout_column="1"
-                    android:layout_marginLeft="5dp"
-                    android:src="@drawable/wrong_image_2"
-                    app:srcCompat="@drawable/wrong_image_2" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_row="1"
-                    android:layout_column="1"
-                    android:layout_gravity="center"
-                    android:text="Multiple species"
-                    android:textColor="#000000" />
-
-
-                <ImageView
-                    android:layout_width="142dp"
-                    android:layout_height="103dp"
-                    android:layout_row="2"
-                    android:layout_column="0"
-                    android:layout_marginLeft="10dp"
-                    android:src="@drawable/wrong_image_3"
-                    app:srcCompat="@drawable/wrong_image_3" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_row="3"
-                    android:layout_column="0"
-                    android:layout_gravity="center"
-                    android:text="Deteriorated"
-                    android:textAllCaps="false"
-                    android:textColor="#000000" />
-
-                <ImageView
-                    android:layout_width="142dp"
-                    android:layout_height="103dp"
-                    android:layout_row="2"
-                    android:layout_column="1"
-                    android:layout_marginLeft="5dp"
-                    android:src="@drawable/wrong_image_4"
-                    app:srcCompat="@drawable/wrong_image_4" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_row="3"
-                    android:layout_column="1"
-                    android:layout_gravity="center"
-                    android:text="Bad angle"
-                    android:textColor="#000000" />
-
-            </GridLayout>
-
-
-        </LinearLayout>
-
-
-    </androidx.cardview.widget.CardView>
-
-    <!--Camera and Gallery Buttons-->
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+<layout>
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/captureContainer"
         android:layout_width="match_parent"
-        android:layout_height="121dp"
-        android:layout_alignWithParentIfMissing="false"
-        android:layout_below="@+id/tipsCard"
-        android:layout_alignParentLeft="false"
-        android:layout_alignParentEnd="false"
-        android:layout_alignParentRight="false"
-        android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="12dp"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        tools:context=".CaptureFragment">
 
-        <Button
-            android:id="@+id/btnCamera"
-            android:layout_width="140dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="56dp"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/tipsCard"
+            android:layout_width="303dp"
+            android:layout_height="460dp"
+            android:layout_centerInParent="false"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txtFishName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="TIPS"
+                    android:textColor="#000000"
+                    android:textSize="30sp" />
+
+                <ImageView
+                    android:id="@+id/imgFish"
+                    android:layout_width="match_parent"
+                    android:layout_height="135dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
+                    app:srcCompat="@drawable/ci_1" />
+
+                <View
+                    android:layout_width="250dp"
+                    android:layout_height="2dp"
+                    android:layout_marginLeft="28dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/black" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="2dp"
+                    android:text="The following can lead to poor results"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
+                <GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:columnCount="2"
+                    android:rowCount="4">
+
+
+                    <ImageView
+                        android:id="@+id/imageView2"
+                        android:layout_width="142dp"
+                        android:layout_height="103dp"
+                        android:layout_row="0"
+                        android:layout_rowWeight="1"
+                        android:layout_column="0"
+                        android:layout_columnWeight="1"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="10dp"
+                        android:src="@drawable/wrong_image_1"
+                        app:srcCompat="@drawable/wrong_image_1" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_row="1"
+                        android:layout_column="0"
+                        android:layout_gravity="center"
+                        android:text="Blurry"
+                        android:textColor="#000000" />
+
+                    <ImageView
+                        android:id="@+id/imageView3"
+                        android:layout_width="142dp"
+                        android:layout_height="103dp"
+                        android:layout_row="0"
+                        android:layout_column="1"
+                        android:layout_marginLeft="5dp"
+                        android:src="@drawable/wrong_image_2"
+                        app:srcCompat="@drawable/wrong_image_2" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_row="1"
+                        android:layout_column="1"
+                        android:layout_gravity="center"
+                        android:text="Multiple species"
+                        android:textColor="#000000" />
+
+
+                    <ImageView
+                        android:layout_width="142dp"
+                        android:layout_height="103dp"
+                        android:layout_row="2"
+                        android:layout_column="0"
+                        android:layout_marginLeft="10dp"
+                        android:src="@drawable/wrong_image_3"
+                        app:srcCompat="@drawable/wrong_image_3" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_row="3"
+                        android:layout_column="0"
+                        android:layout_gravity="center"
+                        android:text="Deteriorated"
+                        android:textAllCaps="false"
+                        android:textColor="#000000" />
+
+                    <ImageView
+                        android:layout_width="142dp"
+                        android:layout_height="103dp"
+                        android:layout_row="2"
+                        android:layout_column="1"
+                        android:layout_marginLeft="5dp"
+                        android:src="@drawable/wrong_image_4"
+                        app:srcCompat="@drawable/wrong_image_4" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_row="3"
+                        android:layout_column="1"
+                        android:layout_gravity="center"
+                        android:text="Bad angle"
+                        android:textColor="#000000" />
+
+                </GridLayout>
+
+
+            </LinearLayout>
+
+
+        </androidx.cardview.widget.CardView>
+
+        <!--Camera and Gallery Buttons-->
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="121dp"
+            android:layout_alignWithParentIfMissing="false"
+            android:layout_below="@+id/tipsCard"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentEnd="false"
+            android:layout_alignParentRight="false"
+            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:text="@string/camera"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/btnGallery"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:layout_conversion_absoluteHeight="60dp"
-            tools:layout_conversion_absoluteWidth="141dp" />
+            android:layout_marginBottom="12dp"
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/btnGallery"
-            android:layout_width="140dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="56dp"
-            android:text="@string/gallery"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/btnCamera"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:layout_conversion_absoluteHeight="60dp"
-            tools:layout_conversion_absoluteWidth="141dp" />
+            <Button
+                android:id="@+id/btnCamera"
+                android:layout_width="140dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="56dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:text="@string/camera"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/btnGallery"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_conversion_absoluteHeight="60dp"
+                tools:layout_conversion_absoluteWidth="141dp" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <Button
+                android:id="@+id/btnGallery"
+                android:layout_width="140dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="56dp"
+                android:text="@string/gallery"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/btnCamera"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_conversion_absoluteHeight="60dp"
+                tools:layout_conversion_absoluteWidth="141dp" />
 
-
-</RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </RelativeLayout>
+</layout>
