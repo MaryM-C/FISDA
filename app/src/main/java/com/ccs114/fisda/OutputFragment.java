@@ -98,6 +98,11 @@ public class OutputFragment extends Fragment {
 
                 Picasso.get().load(fish.getMainImage()).into(bindData.imgFishSpecies);
 
+                //More Images
+                Picasso.get().load(fish.getImg1()).into(bindData.scrlInfo.imgMImages1);
+                Picasso.get().load(fish.getImg2()).into(bindData.scrlInfo.imgMImages2);
+                Picasso.get().load(fish.getImg3()).into(bindData.scrlInfo.imgMImages3);
+
             }
             public void onFishDataNotFound() {
                 Toast.makeText(getContext(), "Fish data not found.", Toast.LENGTH_SHORT).show();

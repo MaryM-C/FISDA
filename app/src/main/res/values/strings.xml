@@ -26,6 +26,10 @@
     <string name="environment">Environment:</string>
     <string name="size">Size:</string>
     <string name="diet">Diet:</string>
+    
+    <string name="other_images">Other Images</string>
+
+    <string name="confidence">Confidence (%):</string>
 
     <!--Button Labels-->
     <string name="camera">Camera</string>

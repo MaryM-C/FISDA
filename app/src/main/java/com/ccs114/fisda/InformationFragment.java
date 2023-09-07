@@ -29,6 +29,11 @@ public class InformationFragment extends AppCompatActivity {
                 displayBioInfo(bindData, fish);
 
                 Picasso.get().load(fish.getMainImage()).into(bindData.mainImage);
+
+                //More Images
+                Picasso.get().load(fish.getImg1()).into(bindData.scrlInfo.imgMImages1);
+                Picasso.get().load(fish.getImg2()).into(bindData.scrlInfo.imgMImages2);
+                Picasso.get().load(fish.getImg3()).into(bindData.scrlInfo.imgMImages3);
             }
 
             @Override
