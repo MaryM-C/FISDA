@@ -6,32 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/searchView"
-        android:background="@drawable/searchbar_background"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:queryHint="Search Fish..."
-        android:layout_marginTop="9dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:padding="8dp"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintWidth_default="percent"
-        app:layout_constraintWidth_percent="0.95"
-        android:layoutDirection="rtl"
-
-        />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_height="wrap_content"
+
         android:clipToPadding="false"
-        android:fadingEdgeLength="8dp"
         android:overScrollMode="ifContentScrolls"
         android:padding="8dp"
         android:requiresFadingEdge="vertical"
@@ -40,9 +20,30 @@
         android:scrollbarStyle="outsideOverlay"
         android:scrollbarThumbVertical="@android:color/darker_gray"
         android:scrollbars="vertical"
-        app:layout_constraintTop_toBottomOf="@id/searchView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchView" />
+
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/searchView"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="9dp"
+        android:background="@drawable/searchbar_background"
+        android:clickable="false"
+        android:layoutDirection="rtl"
+        android:padding="8dp"
+        android:queryHint="Search Fish..."
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+
+        app:layout_constraintWidth_default="percent"
+        app:layout_constraintWidth_percent="0.95" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
