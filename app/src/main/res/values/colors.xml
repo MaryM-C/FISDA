@@ -19,4 +19,11 @@
     <color name="ucrop_color_statusbar">#03A9F4</color>
     <color name="ucrop_color_widget_active">#03A9F4</color>
 
+    <!--Custom color for App Theme-->
+    <color name="cataline_blue">#09257F</color>
+    <color name="frostee">#D6F0DF</color>
+
+
+
+
 </resources>
