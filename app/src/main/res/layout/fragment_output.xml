@@ -32,14 +32,15 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/imgInputFish"
-                android:layout_width="113dp"
-                android:layout_height="63dp"
+                android:layout_width="120dp"
+                android:layout_height="131dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="156dp"
+                android:layout_marginTop="152dp"
                 android:clickable="false"
                 android:contentDescription="@string/common_name"
+                android:src="@drawable/wrong_image_4"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:srcCompat="@tools:sample/backgrounds/scenic" />

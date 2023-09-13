@@ -2,7 +2,9 @@ package com.ccs114.fisda;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.ThumbnailUtils;
+import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,20 +18,29 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.databinding.DataBindingUtil;
 import com.ccs114.fisda.databinding.FragmentOutputBinding;
+import com.ceylonlabs.imageviewpopup.ImagePopup;
 import com.squareup.picasso.Picasso;
 
 public class OutputFragment extends Fragment {
     FishDataManager fishDataManager = new FishDataManager();
+    Bundle args;
+    ImagePopup imagePopup;
+    FragmentOutputBinding bindData;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        FragmentOutputBinding bindData =
-                DataBindingUtil.inflate(inflater, R.layout.fragment_output,  container, false);
+        bindData = DataBindingUtil.inflate(inflater, R.layout.fragment_output,  container, false);
 
         View view = bindData.getRoot();
+        args = getArguments();
+        imagePopup = new ImagePopup(getActivity());
+
+        imagePopup.setHideCloseIcon(true);  // Optional
+        imagePopup.setImageOnClickClose(true);  // Optional
+
+
 
         // Retrieve data from the arguments bundle
-        Bundle args = getArguments();
         if (args != null) {
             String imagePath = args.getString("imagePath");
             String[] topFishSpecies = args.getStringArray("topFishSpecies");
@@ -38,13 +49,11 @@ public class OutputFragment extends Fragment {
             //button
             bindData.btnResultOne.setEnabled(false);
             //Image from the user
-            displayImage(bindData.imgInputFish, bindData.imgFishSpecies, args);
-
-            //TODO Add the image from the Firebase here
+            displayImage(bindData.imgInputFish, bindData.imgFishSpecies);
 
 
             displayFishInfo(bindData, topFishSpecies[0], topConfidences[0]);
-//
+
 
             bindData.btnResultOne.setOnClickListener(view1 -> {
                 displayFishInfo(bindData, topFishSpecies[0], topConfidences[0]);
@@ -76,6 +85,8 @@ public class OutputFragment extends Fragment {
                 transaction.replace(R.id.container, captureFragment);
                 transaction.commit();
             });
+
+            bindData.imgInputFish.setOnClickListener(view15 -> imagePopup.viewPopup());
         }
 
 
@@ -98,7 +109,9 @@ public class OutputFragment extends Fragment {
 
                 Picasso.get().load(fish.getMainImage()).into(bindData.imgFishSpecies);
 
+
                 //More Images
+                imagePopup.initiatePopup(bindData.imgInputFish.getDrawable());
                 Picasso.get().load(fish.getImg1()).into(bindData.scrlInfo.imgMImages1);
                 Picasso.get().load(fish.getImg2()).into(bindData.scrlInfo.imgMImages2);
                 Picasso.get().load(fish.getImg3()).into(bindData.scrlInfo.imgMImages3);
@@ -138,20 +151,28 @@ public class OutputFragment extends Fragment {
         });
     }
 
-    private void displayImage(ImageView imageView, ImageView refImage,  Bundle args) {
+    private void displayImage(ImageView imageView, ImageView refImage) {
         byte[] byteArray = args.getByteArray("imagebytes");
-        if(byteArray != null) {
+        if (byteArray != null) {
             Bitmap image = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-            image = ThumbnailUtils.extractThumbnail(image, 150, 90);
-            imageView.setImageBitmap(image);
-            //TODO
-            /*delete if the image from the Firebase is added*/
-//            Bitmap thumbnail = ThumbnailUtils.extractThumbnail(image, 370, 200);
-//            refImage.setImageBitmap(thumbnail);
 
+            // Calculate the scaling factors for width and height
+            float scaleX = (float) 900 / image.getWidth();
+            float scaleY = (float) 750 / image.getHeight();
 
+            // Create a matrix for the scaling transformation
+            Matrix matrix = new Matrix();
+            matrix.postScale(scaleX, scaleY);
+
+            // Create a new Bitmap with the desired dimensions
+            Bitmap resizedImage = Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, true);
+
+            imageView.setImageBitmap(resizedImage);
+            imagePopup.setWindowHeight(resizedImage.getHeight()); // Optional
+            imagePopup.setWindowWidth(resizedImage.getWidth()); // Optional
+            Drawable imgDrawable = new BitmapDrawable(resizedImage);
+            bindData.imgInputFish.setImageDrawable(imgDrawable);
         }
+
     }
-
-
 }
