@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:drawable="@drawable/circular_button"
+        android:state_checked="true"
+        android:state_pressed="true"
 
+        />
+    <item
+        android:drawable="@drawable/selected_radiobutton"
+        android:state_pressed="true" />
+    <item
+        android:drawable="@drawable/selected_radiobutton"
+        android:state_checked="true" />
+    <item
+        android:drawable="@drawable/regular_radiobutton" />
 </selector>

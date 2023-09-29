@@ -3,8 +3,7 @@
     android:shape="oval">
 
     <!-- Background color of the button -->
-    <solid android:color="@color/frostee" />
-
+    <solid android:color="@color/cataline_blue" />
 
     <size
         android:height="48dp"
