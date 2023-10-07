@@ -6,6 +6,7 @@ import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.databinding.DataBindingUtil;
 import com.ccs114.fisda.databinding.FragmentOutputBinding;
+
 import com.ceylonlabs.imageviewpopup.ImagePopup;
 import com.squareup.picasso.Picasso;
 
@@ -97,8 +99,11 @@ public class OutputFragment extends Fragment {
         fishDataManager.getFishData(fishName, new FishDataManager.FishDataListener() {
             public void onFishDataLoaded(Fish fish) {
 
+
                 bindData.setConfidence(confidence + "%");
                 bindData.scrlInfo.setEnglishName(fishName);
+
+                Log.d("OutputContent", "Fish name: " + fishName + " confidence: " + confidence + "%" );
 
                 displayBasicInfo(bindData, fish);
                 displayTaxonomy(bindData, fish);
