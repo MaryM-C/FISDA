@@ -57,6 +57,8 @@ dependencies {
     //image dependencies
     implementation 'com.squareup.picasso:picasso:2.8'
     implementation 'com.github.dhaval2404:imagepicker:2.1'
+    implementation 'com.github.chathuralakmal:AndroidImagePopup:1.2.2'
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
 
     //tensorflow dependencies
     implementation 'org.tensorflow:tensorflow-lite-support:0.1.0'
