@@ -14,6 +14,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -44,6 +46,7 @@ public class CaptureFragment extends Fragment {
     private static final int REQUEST_PICK_IMAGE = 1;
     private final int imageSize = 224;
 
+
     /**
      * Inflates the layout for the CaptureFragment, initializes UI elements, and sets up click listeners
      * for the camera and gallery buttons.
@@ -62,12 +65,15 @@ public class CaptureFragment extends Fragment {
         View view = bindData.getRoot();
 
         bindData.btnCamera.setOnClickListener(view1 -> {
-            //Asks permission to launch the camera
-            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            // Check if both CAMERA and WRITE_EXTERNAL_STORAGE permissions are granted
+            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                // Both permissions are granted, so you can launch the camera
                 Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
             } else {
-                requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
+                // Request both CAMERA and WRITE_EXTERNAL_STORAGE permissions
+                requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CAMERA_PERMISSION);
             }
         });
 
@@ -109,7 +115,7 @@ public class CaptureFragment extends Fragment {
 
             if (image != null) {
                 // Save the image to a file
-                String imagePath = saveImageToFile(image);
+                String imagepath = moveImageToCustomFolder();
 
                 //Classify the fish and return the top three results
                 Bitmap testImage = ThumbnailUtils.extractThumbnail(image, imageSize, imageSize);
@@ -124,7 +130,7 @@ public class CaptureFragment extends Fragment {
 
                 // Pass the data to the OutputFragment
                 OutputFragment outputFragment = new OutputFragment();
-                outputFragment.setArguments(fishInputInfo(byteArray, topFishSpecies, topConfidences));
+                outputFragment.setArguments(fishInputInfo(byteArray, topFishSpecies, topConfidences, imagepath));
 
                 displayFishInfo(outputFragment);
 
@@ -145,11 +151,12 @@ public class CaptureFragment extends Fragment {
      * @return A Bundle containing the image byte array, top fish species names, and confidence scores.
      */
     @NonNull
-    private Bundle fishInputInfo(byte[] fishByteArray, String[] topFishSpecies, String[] topConfidences) {
+    private Bundle fishInputInfo(byte[] fishByteArray, String[] topFishSpecies, String[] topConfidences, String imagepath) {
         Bundle args = new Bundle();
         args.putByteArray("imagebytes", fishByteArray);
         args.putStringArray("topFishSpecies", topFishSpecies);
         args.putStringArray("topConfidences", topConfidences);
+        args.putString("imagepath", imagepath);
         logBundleContents(args);
 
         return args;
@@ -212,18 +219,78 @@ public class CaptureFragment extends Fragment {
      * @return a String containing the new file path of the image captured from the camera
      */
     private String saveImageToFile(Bitmap bitmap) {
-        //TODO Capture images using Camera should save the image
-        String imagePath = Environment.getExternalStorageDirectory() + File.separator + "image.jpg";
+        File backupFile;
+        File appFolder;
+        String path= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + "/FiSDA";
+        appFolder = new File(path);
+        if (!appFolder.exists()) {
+            appFolder.mkdir();
+            Toast.makeText(getContext(), "Created", Toast.LENGTH_LONG).show();
+        }
+
+        String fileName = "picture.jpg";
+        backupFile = new File(appFolder, fileName);
+        FileOutputStream output = null;
         try {
-            FileOutputStream outputStream = new FileOutputStream(imagePath);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-            outputStream.flush();
-            outputStream.close();
+            output = new FileOutputStream(backupFile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, output);
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            if (null != output) {
+                try {
+                    output.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
-        return imagePath;
+
+        return output.toString();
     }
+
+
+
+    public String moveImageToCustomFolder() {
+        File sourceDirectory = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/temp");
+        File destinationDirectory = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + "/FiSDA");
+
+        // Check if the source directory exists and is a directory
+        if (sourceDirectory.exists() && sourceDirectory.isDirectory()) {
+            // Ensure that the destination directory exists; if not, create it
+            if (!destinationDirectory.exists()) {
+                destinationDirectory.mkdirs();
+            }
+
+            // List the files in the source directory
+            File[] sourceFiles = sourceDirectory.listFiles();
+
+            // Check if there is exactly one file in the source directory
+            if (sourceFiles != null && sourceFiles.length == 1) {
+                // Get the source file (the only file in the directory)
+                File sourceFile = sourceFiles[0];
+
+                // Create a File object for the destination file
+                File destinationFile = new File(destinationDirectory, sourceFile.getName());
+
+                // Perform the file move operation
+                if (sourceFile.renameTo(destinationFile)) {
+                    // Return the new file path
+                    return destinationFile.getAbsolutePath();
+                } else {
+                    // Handle the case where the file couldn't be moved
+                    return null;
+                }
+            } else {
+                // Handle the case where there is not exactly one file in the source directory
+                return null;
+            }
+        } else {
+            // Handle the case where the source directory doesn't exist or is not a directory
+            return null;
+        }
+    }
+
 
     /**
      * Logs the contents of the fish information bundle before passing it to the OutputFragment
