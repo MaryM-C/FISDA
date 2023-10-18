@@ -17,7 +17,6 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
                 android:background="?attr/actionModeCloseDrawable"
                 app:layout_constraintStart_toStartOf="parent"

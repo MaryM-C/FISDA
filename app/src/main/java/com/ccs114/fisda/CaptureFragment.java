@@ -4,11 +4,14 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.FileUtils;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +22,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -30,6 +34,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import androidx.databinding.DataBindingUtil;
 import com.ccs114.fisda.databinding.FragmentCaptureBinding;
@@ -45,6 +51,10 @@ public class CaptureFragment extends Fragment {
     private static final int REQUEST_IMAGE_CAPTURE = 3;
     private static final int REQUEST_PICK_IMAGE = 1;
     private final int imageSize = 224;
+
+    String imageFileName;
+
+    String currentPhotoPath;
 
 
     /**
@@ -65,16 +75,29 @@ public class CaptureFragment extends Fragment {
         View view = bindData.getRoot();
 
         bindData.btnCamera.setOnClickListener(view1 -> {
-            // Check if both CAMERA and WRITE_EXTERNAL_STORAGE permissions are granted
+//            // Check if both CAMERA and WRITE_EXTERNAL_STORAGE permissions are granted
+//            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
+//                    ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+//                // Both permissions are granted, so you can launch the camera
+//                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
+//            } else {
+//                // Request both CAMERA and WRITE_EXTERNAL_STORAGE permissions
+//                requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CAMERA_PERMISSION);
+//            }
+// Check if both CAMERA and WRITE_EXTERNAL_STORAGE permissions are granted
             if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
                     ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 // Both permissions are granted, so you can launch the camera
-                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
+
+                    dispatchTakePictureIntent();
+
             } else {
                 // Request both CAMERA and WRITE_EXTERNAL_STORAGE permissions
                 requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CAMERA_PERMISSION);
             }
+
+
         });
 
         bindData.btnGallery.setOnClickListener(view12 -> {
@@ -86,6 +109,72 @@ public class CaptureFragment extends Fragment {
         return view;
     }
 
+    private void dispatchTakePictureIntent()  {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(getContext(), "No file", Toast.LENGTH_LONG).show();
+
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(getContext(),
+                        "com.ccs114.fisda.fileprovider",
+                        photoFile);
+
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                galleryAddPic();
+
+            } else {
+                Toast.makeText(getContext(), "Failed", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+    private void galleryAddPic() {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(currentPhotoPath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        getActivity().sendBroadcast(mediaScanIntent);
+    }
+
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        imageFileName = "FISDA_" + timeStamp + "_";
+        File storageDir = new File(getContext().getExternalFilesDir(
+                Environment.DIRECTORY_PICTURES), "FiSDA");
+
+        if (! storageDir.exists()){
+            if (! storageDir.mkdirs()){
+                Log.d("MyCameraApp", "failed to create directory");
+                return null;
+            }
+        }
+
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = image.getAbsolutePath();
+        Log.d("CurrentPath", currentPhotoPath);
+        return image;
+    }
+
+
+
     /**
     * Handles the result of the camera or gallery activity and processes the selected image.
     *
@@ -95,17 +184,33 @@ public class CaptureFragment extends Fragment {
     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        getActivity();
 
-        if (resultCode == Activity.RESULT_OK && data != null) {
+
+        if (resultCode == Activity.RESULT_OK) {
+            Toast.makeText(getContext(), "activity ok", Toast.LENGTH_LONG).show();
+
             Bitmap image = null;
 
             if (requestCode == REQUEST_IMAGE_CAPTURE) {
                 // If requestCode is REQUEST_IMAGE_CAPTURE, it means the image was taken with the camera directly
-                image = (Bitmap) data.getExtras().get("data");
+//                image = (Bitmap) data.getExtras().get("data");
+               // Get the bitmap from the captured image
+                try {
+                    image = BitmapFactory.decodeFile(currentPhotoPath);
+                    Toast.makeText(getContext(), "success bitmap", Toast.LENGTH_LONG).show();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(), "failed bitmap", Toast.LENGTH_LONG).show();
+
+                }
             } else if (requestCode == REQUEST_PICK_IMAGE) {
                 // If the requestCode is REQUEST_PICK_IMAGE, it means the image was picked from the gallery
                 Uri dat = data.getData();
+                currentPhotoPath = getImagePathFromUri(dat);
+                imageFileName = getImageFileName(currentPhotoPath);
+
+
                 try {
                     image = MediaStore.Images.Media.getBitmap(requireContext().getContentResolver(), dat);
                 } catch (IOException e) {
@@ -115,7 +220,9 @@ public class CaptureFragment extends Fragment {
 
             if (image != null) {
                 // Save the image to a file
-                String imagepath = moveImageToCustomFolder();
+//                String imagepath = moveImageToCustomFolder();
+//                Log.d("Destination_file", "path: " + imagepath);
+                String imagepath = currentPhotoPath;
 
                 //Classify the fish and return the top three results
                 Bitmap testImage = ThumbnailUtils.extractThumbnail(image, imageSize, imageSize);
@@ -138,8 +245,38 @@ public class CaptureFragment extends Fragment {
                 Log.d("ActivityResult", "Failed to retrieve the image.");
             }
         }
+        else {
+                if(resultCode != Activity.RESULT_OK) {
+                    Toast.makeText(getContext(), "activity not ok" + resultCode, Toast.LENGTH_LONG).show();
+                } else if (data == null) {
+                    Toast.makeText(getContext(), "data is null", Toast.LENGTH_LONG).show();
+
+                }
+        }
 
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private String getImagePathFromUri(Uri uri) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+        Cursor cursor = requireContext().getContentResolver().query(uri, projection, null, null, null);
+        if (cursor != null) {
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            String path = cursor.getString(column_index);
+            cursor.close();
+            return path;
+        }
+        return null;
+    }
+
+    // Function to get the filename from the file path
+    private String getImageFileName(String imagePath) {
+        if (imagePath != null) {
+            File imageFile = new File(imagePath);
+            return imageFile.getName();
+        }
+        return null;
     }
 
     /**
@@ -153,10 +290,12 @@ public class CaptureFragment extends Fragment {
     @NonNull
     private Bundle fishInputInfo(byte[] fishByteArray, String[] topFishSpecies, String[] topConfidences, String imagepath) {
         Bundle args = new Bundle();
+
         args.putByteArray("imagebytes", fishByteArray);
         args.putStringArray("topFishSpecies", topFishSpecies);
         args.putStringArray("topConfidences", topConfidences);
         args.putString("imagepath", imagepath);
+        args.putString("filename", imageFileName);
         logBundleContents(args);
 
         return args;
@@ -178,6 +317,7 @@ public class CaptureFragment extends Fragment {
             TensorBuffer inputFeature0 = TensorBuffer.createFixedSize(new int[]{1, 224, 224, 3}, DataType.FLOAT32);
             ByteBuffer byteBuffer = ByteBuffer.allocateDirect(4 * imageSize * imageSize * 3);
             byteBuffer.order(ByteOrder.nativeOrder());
+
 
             int[] intValues = new int[imageSize * imageSize];
             image.getPixels(intValues, 0, image.getWidth(), 0,0, image.getWidth(), image.getHeight());
@@ -276,6 +416,7 @@ public class CaptureFragment extends Fragment {
                 // Perform the file move operation
                 if (sourceFile.renameTo(destinationFile)) {
                     // Return the new file path
+
                     return destinationFile.getAbsolutePath();
                 } else {
                     // Handle the case where the file couldn't be moved

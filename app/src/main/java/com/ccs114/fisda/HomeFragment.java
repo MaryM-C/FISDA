@@ -43,7 +43,7 @@ public class HomeFragment extends Fragment {
 
 
         //getting recyclerview in xml file
-        recyclerView = view.findViewById(R.id.recyclerview);
+        recyclerView = view.findViewById(R.id.collectionRecyclerView);
 
 
 

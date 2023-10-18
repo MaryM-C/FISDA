@@ -65,7 +65,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 String commonName = myItems.getCommonName();
                 intent.putExtra("commonname", commonName);
 
-
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }
@@ -93,7 +92,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             commonName= itemView.findViewById(R.id.commonName);
             localName=itemView.findViewById(R.id.localName);
             category=itemView.findViewById(R.id.category);
-            image=itemView.findViewById(R.id.image);
+            image=itemView.findViewById(R.id.imgViewFish);
 
         }
 

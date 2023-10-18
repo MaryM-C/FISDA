@@ -37,4 +37,6 @@
     <string name="btnResultOne">1</string>
     <string name="btnResulTwo">2</string>
     <string name="btnResultThree">3</string>
+    <string name="btn_save">Save Image</string>
+
 </resources>

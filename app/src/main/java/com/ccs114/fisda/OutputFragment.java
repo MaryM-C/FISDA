@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,6 +30,10 @@ public class OutputFragment extends Fragment {
     ImagePopup imagePopup;
     FragmentOutputBinding bindData;
 
+
+
+
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         bindData = DataBindingUtil.inflate(inflater, R.layout.fragment_output,  container, false);
@@ -44,9 +49,11 @@ public class OutputFragment extends Fragment {
 
         // Retrieve data from the arguments bundle
         if (args != null) {
-            String imagePath = args.getString("imagePath");
+            String imageFileName = args.getString("filename");
+            String imagePath = args.getString("imagepath");
             String[] topFishSpecies = args.getStringArray("topFishSpecies");
             String[] topConfidences = args.getStringArray("topConfidences");
+
 
             //button
             bindData.btnResultOne.setEnabled(false);
@@ -54,11 +61,11 @@ public class OutputFragment extends Fragment {
             displayImage(bindData.imgInputFish, bindData.imgFishSpecies);
 
 
-            displayFishInfo(bindData, topFishSpecies[0], topConfidences[0]);
+            displayFishInfo(topFishSpecies[0], topConfidences[0]);
 
 
             bindData.btnResultOne.setOnClickListener(view1 -> {
-                displayFishInfo(bindData, topFishSpecies[0], topConfidences[0]);
+                displayFishInfo(topFishSpecies[0], topConfidences[0]);
                 bindData.btnResultOne.setEnabled(false);
 
                 bindData.btnResultTwo.setEnabled(true);
@@ -66,14 +73,14 @@ public class OutputFragment extends Fragment {
 
             });
             bindData.btnResultTwo.setOnClickListener(view12 -> {
-               displayFishInfo(bindData, topFishSpecies[1], topConfidences[1]);
+               displayFishInfo(topFishSpecies[1], topConfidences[1]);
                 bindData.btnResultTwo.setEnabled(false);
 
                 bindData.btnResultOne.setEnabled(true);
                 bindData.btnResultThree.setEnabled(true);
             });
             bindData.btnResultThree.setOnClickListener(view13 -> {
-                displayFishInfo(bindData, topFishSpecies[2], topConfidences[2]);
+                displayFishInfo(topFishSpecies[2], topConfidences[2]);
                 bindData.btnResultThree.setEnabled(false);
 
                 bindData.btnResultOne.setEnabled(true);
@@ -89,16 +96,29 @@ public class OutputFragment extends Fragment {
             });
 
             bindData.imgInputFish.setOnClickListener(view15 -> imagePopup.viewPopup());
+
+            bindData.btnSave.setOnClickListener(view16 -> {
+                CollectionsDbHelper dbHelper = new CollectionsDbHelper(getContext());
+                dbHelper.addFishData(imagePath, imageFileName, topFishSpecies, topConfidences);
+
+                CaptureFragment captureFragment = new CaptureFragment();
+                FragmentManager manager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction transaction = manager.beginTransaction();
+                transaction.replace(R.id.container, captureFragment);
+                transaction.commit();
+
+
+            });
         }
+
 
 
         return view;
     }
 
-    private void displayFishInfo(FragmentOutputBinding bindData, String fishName, String confidence) {
+    private void displayFishInfo(String fishName, String confidence) {
         fishDataManager.getFishData(fishName, new FishDataManager.FishDataListener() {
             public void onFishDataLoaded(Fish fish) {
-
 
                 bindData.setConfidence(confidence + "%");
                 bindData.scrlInfo.setEnglishName(fishName);
