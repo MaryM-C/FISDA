@@ -2,13 +2,16 @@ package com.ccs114.fisda;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaScannerConnection;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.FileUtils;
@@ -30,6 +33,7 @@ import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -75,29 +79,19 @@ public class CaptureFragment extends Fragment {
         View view = bindData.getRoot();
 
         bindData.btnCamera.setOnClickListener(view1 -> {
-//            // Check if both CAMERA and WRITE_EXTERNAL_STORAGE permissions are granted
-//            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
-//                    ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-//                // Both permissions are granted, so you can launch the camera
-//                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//                startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
-//            } else {
-//                // Request both CAMERA and WRITE_EXTERNAL_STORAGE permissions
-//                requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CAMERA_PERMISSION);
-//            }
-// Check if both CAMERA and WRITE_EXTERNAL_STORAGE permissions are granted
-            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
-                    ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                // Both permissions are granted, so you can launch the camera
+            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) ==
+                    PackageManager.PERMISSION_GRANTED &&  ActivityCompat.checkSelfPermission(requireContext(),
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
 
+                    // Both permissions are granted, so you can launch the camera
                     dispatchTakePictureIntent();
 
             } else {
                 // Request both CAMERA and WRITE_EXTERNAL_STORAGE permissions
-                requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CAMERA_PERMISSION);
+                requestPermissions(new String[]{Manifest.permission.CAMERA,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        REQUEST_CAMERA_PERMISSION);
             }
-
-
         });
 
         bindData.btnGallery.setOnClickListener(view12 -> {
@@ -113,54 +107,37 @@ public class CaptureFragment extends Fragment {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-
             // Create the File where the photo should go
             File photoFile = null;
             try {
                 photoFile = createImageFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-                Toast.makeText(getContext(), "No file", Toast.LENGTH_LONG).show();
-
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(getContext(),
                         "com.ccs114.fisda.fileprovider",
                         photoFile);
-
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-                galleryAddPic();
-
-            } else {
-                Toast.makeText(getContext(), "Failed", Toast.LENGTH_LONG).show();
+                scanFile(photoFile, "image/jpeg");
             }
         }
+
     }
-    private void galleryAddPic() {
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(currentPhotoPath);
-        Uri contentUri = Uri.fromFile(f);
-        mediaScanIntent.setData(contentUri);
-        getActivity().sendBroadcast(mediaScanIntent);
+    public void scanFile(File f, String mimeType) {
+        MediaScannerConnection
+                .scanFile(getContext(), new String[] {f.getAbsolutePath()},
+                        new String[] {mimeType}, null);
     }
 
 
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        imageFileName = "FISDA_" + timeStamp + "_";
-        File storageDir = new File(getContext().getExternalFilesDir(
-                Environment.DIRECTORY_PICTURES), "FiSDA");
-
-        if (! storageDir.exists()){
-            if (! storageDir.mkdirs()){
-                Log.d("MyCameraApp", "failed to create directory");
-                return null;
-            }
-        }
-
+        String imageFileName = "FiSDA" + timeStamp + "_";
+        File storageDir = getContext().getExternalFilesDir(null);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
@@ -169,9 +146,11 @@ public class CaptureFragment extends Fragment {
 
         // Save a file: path for use with ACTION_VIEW intents
         currentPhotoPath = image.getAbsolutePath();
-        Log.d("CurrentPath", currentPhotoPath);
         return image;
+
     }
+
+
 
 
 
@@ -192,8 +171,6 @@ public class CaptureFragment extends Fragment {
             Bitmap image = null;
 
             if (requestCode == REQUEST_IMAGE_CAPTURE) {
-                // If requestCode is REQUEST_IMAGE_CAPTURE, it means the image was taken with the camera directly
-//                image = (Bitmap) data.getExtras().get("data");
                // Get the bitmap from the captured image
                 try {
                     image = BitmapFactory.decodeFile(currentPhotoPath);
@@ -204,25 +181,29 @@ public class CaptureFragment extends Fragment {
                     Toast.makeText(getContext(), "failed bitmap", Toast.LENGTH_LONG).show();
 
                 }
-            } else if (requestCode == REQUEST_PICK_IMAGE) {
+                imageFileName = getImageFileName(currentPhotoPath);
+            }
+            if (requestCode == REQUEST_PICK_IMAGE) {
                 // If the requestCode is REQUEST_PICK_IMAGE, it means the image was picked from the gallery
                 Uri dat = data.getData();
-                currentPhotoPath = getImagePathFromUri(dat);
-                imageFileName = getImageFileName(currentPhotoPath);
-
 
                 try {
                     image = MediaStore.Images.Media.getBitmap(requireContext().getContentResolver(), dat);
+                    // Save the image in the same directory as camera images
+                    currentPhotoPath = saveImageToCameraDirectory(image, "new");
+                    imageFileName = getImageFileName(currentPhotoPath);
+
+
+
+
+
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
 
             if (image != null) {
-                // Save the image to a file
-//                String imagepath = moveImageToCustomFolder();
-//                Log.d("Destination_file", "path: " + imagepath);
-                String imagepath = currentPhotoPath;
 
                 //Classify the fish and return the top three results
                 Bitmap testImage = ThumbnailUtils.extractThumbnail(image, imageSize, imageSize);
@@ -237,7 +218,7 @@ public class CaptureFragment extends Fragment {
 
                 // Pass the data to the OutputFragment
                 OutputFragment outputFragment = new OutputFragment();
-                outputFragment.setArguments(fishInputInfo(byteArray, topFishSpecies, topConfidences, imagepath));
+                outputFragment.setArguments(fishInputInfo(byteArray, topFishSpecies, topConfidences, currentPhotoPath));
 
                 displayFishInfo(outputFragment);
 
@@ -246,18 +227,44 @@ public class CaptureFragment extends Fragment {
             }
         }
         else {
-                if(resultCode != Activity.RESULT_OK) {
-                    Toast.makeText(getContext(), "activity not ok" + resultCode, Toast.LENGTH_LONG).show();
-                } else if (data == null) {
+                if (data == null) {
                     Toast.makeText(getContext(), "data is null", Toast.LENGTH_LONG).show();
-
                 }
         }
 
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private String getImagePathFromUri(Uri uri) {
+    // Save the image in the same directory as camera images and return the new path
+    private String saveImageToCameraDirectory(Bitmap image, String fileName) throws IOException {
+        // Get the directory where camera images are saved
+
+
+            // Create a new file in the camera directory with the provided fileName
+            File imageFile = createImageFile();
+
+            try {
+                FileOutputStream fos = new FileOutputStream(imageFile);
+                image.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                fos.flush();
+                fos.close();
+
+                // Notify the media scanner to scan the new image file
+                scanFile(imageFile, "image/jpeg");
+
+                // Return the path of the saved image
+                return imageFile.getAbsolutePath();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e("SaveImage", "Failed to save image: " + e.getMessage());
+                return null;
+            }
+    }
+
+
+
+
+        private String getImagePathFromUri(Uri uri) {
         String[] projection = {MediaStore.Images.Media.DATA};
         Cursor cursor = requireContext().getContentResolver().query(uri, projection, null, null, null);
         if (cursor != null) {
@@ -350,86 +357,6 @@ public class CaptureFragment extends Fragment {
             Log.e("ERROR", "Failed to load model/file" + e.getMessage());
         }
         return handler;
-    }
-
-    /**
-     * Saves the user-selected image to a file and returns the file's new path
-     *
-     * @param bitmap The image selected by the user
-     * @return a String containing the new file path of the image captured from the camera
-     */
-    private String saveImageToFile(Bitmap bitmap) {
-        File backupFile;
-        File appFolder;
-        String path= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + "/FiSDA";
-        appFolder = new File(path);
-        if (!appFolder.exists()) {
-            appFolder.mkdir();
-            Toast.makeText(getContext(), "Created", Toast.LENGTH_LONG).show();
-        }
-
-        String fileName = "picture.jpg";
-        backupFile = new File(appFolder, fileName);
-        FileOutputStream output = null;
-        try {
-            output = new FileOutputStream(backupFile);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, output);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (null != output) {
-                try {
-                    output.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        return output.toString();
-    }
-
-
-
-    public String moveImageToCustomFolder() {
-        File sourceDirectory = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/temp");
-        File destinationDirectory = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + "/FiSDA");
-
-        // Check if the source directory exists and is a directory
-        if (sourceDirectory.exists() && sourceDirectory.isDirectory()) {
-            // Ensure that the destination directory exists; if not, create it
-            if (!destinationDirectory.exists()) {
-                destinationDirectory.mkdirs();
-            }
-
-            // List the files in the source directory
-            File[] sourceFiles = sourceDirectory.listFiles();
-
-            // Check if there is exactly one file in the source directory
-            if (sourceFiles != null && sourceFiles.length == 1) {
-                // Get the source file (the only file in the directory)
-                File sourceFile = sourceFiles[0];
-
-                // Create a File object for the destination file
-                File destinationFile = new File(destinationDirectory, sourceFile.getName());
-
-                // Perform the file move operation
-                if (sourceFile.renameTo(destinationFile)) {
-                    // Return the new file path
-
-                    return destinationFile.getAbsolutePath();
-                } else {
-                    // Handle the case where the file couldn't be moved
-                    return null;
-                }
-            } else {
-                // Handle the case where there is not exactly one file in the source directory
-                return null;
-            }
-        } else {
-            // Handle the case where the source directory doesn't exist or is not a directory
-            return null;
-        }
     }
 
 
