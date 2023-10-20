@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.ccs114.fisda.databinding.FragmentOutputBinding;
 
 import java.util.ArrayList;
 
@@ -44,15 +43,15 @@ public class CollectionFragment extends Fragment {
 
         storeDataInArrays();
 
-        collectionsAdapter = new CollectionsAdapter(getContext(), id, filename, data_taken, image_path);
-        recyclerView.setAdapter(collectionsAdapter);
+        collectionsAdapter = new CollectionsAdapter(getActivity(), id, filename, data_taken, image_path);
+        collectionsAdapter.getItemCount();
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         gridLayoutManager.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(gridLayoutManager);
+        recyclerView.setAdapter(collectionsAdapter);
 
-
-        return inflater.inflate(R.layout.fragment_collection, container, false);
+        return view;
 
     }
     void storeDataInArrays() {
