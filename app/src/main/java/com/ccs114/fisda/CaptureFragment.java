@@ -137,7 +137,7 @@ public class CaptureFragment extends Fragment {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "FiSDA" + timeStamp + "_";
-        File storageDir = getContext().getExternalFilesDir(null);
+        File storageDir = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
