@@ -39,11 +39,12 @@ public class CollectionFragment extends Fragment {
         third_name = new ArrayList<>();
         first_conf = new ArrayList<>();
         second_conf = new ArrayList<>();
-        third_name = new ArrayList<>();
+        third_conf = new ArrayList<>();
 
         storeDataInArrays();
 
-        collectionsAdapter = new CollectionsAdapter(getActivity(), id, filename, data_taken, image_path);
+        collectionsAdapter = new CollectionsAdapter(getActivity(), id, filename, data_taken, image_path, first_name,
+                second_name, third_name, first_conf, second_conf, third_conf);
         collectionsAdapter.getItemCount();
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
@@ -66,12 +67,12 @@ public class CollectionFragment extends Fragment {
                 data_taken.add(cursor.getString(2));
                 image_path.add(cursor.getString(3));
                 Log.d("DBContents", id.get(size) + " " + filename.get(size) + " " + data_taken.get(size) + " " + image_path.get(size));
-//                first_name.add(cursor.getString(4));
-//                second_name.add(cursor.getString(5));
-//                third_name.add(cursor.getString(6));
-//                first_conf.add(cursor.getString(7));
-//                second_conf.add(cursor.getString(8));
-//                third_conf.add(cursor.getString(9));
+                first_name.add(cursor.getString(4));
+                second_name.add(cursor.getString(5));
+                third_name.add(cursor.getString(6));
+                first_conf.add(cursor.getString(7));
+                second_conf.add(cursor.getString(8));
+                third_conf.add(cursor.getString(9));
                 size++;
             }
         }

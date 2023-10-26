@@ -53,6 +53,11 @@ public class OutputFragment extends Fragment {
             String imagePath = args.getString("imagepath");
             String[] topFishSpecies = args.getStringArray("topFishSpecies");
             String[] topConfidences = args.getStringArray("topConfidences");
+            Boolean savedImage = args.getBoolean("Saved");
+
+            if(savedImage) {
+                bindData.btnSave.setVisibility(View.INVISIBLE);
+            }
 
 
             //button
