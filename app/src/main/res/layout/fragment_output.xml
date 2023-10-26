@@ -8,6 +8,13 @@
         <variable
             name="confidence"
             type="String" />
+        <import type="android.view.View"/>
+        <variable
+            name="showDescription"
+            type="Boolean" />
+        <variable
+            name="showRetake"
+            type="Boolean" />
     </data>
 
     <LinearLayout
@@ -30,7 +37,8 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:srcCompat="@tools:sample/backgrounds/scenic" />
+                tools:srcCompat="@tools:sample/backgrounds/scenic"
+                android:scaleType="centerCrop"/>
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/imgInputFish"
@@ -43,7 +51,8 @@
                 android:src="@drawable/wrong_image_4"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:srcCompat="@tools:sample/backgrounds/scenic" />
+                tools:srcCompat="@tools:sample/backgrounds/scenic"
+                android:scaleType="centerCrop"/>
 
             <ImageButton
                 android:id="@+id/btnBack"
@@ -152,8 +161,15 @@
 
        <!--Fish Information-->
         <include
+            android:id="@+id/description"
             layout="@layout/description_layout"
-            android:id="@+id/scrlInfo" />
+            android:visibility="@{showDescription ? View.VISIBLE:View.GONE}"/>
+
+        <!--Retake Instruction-->
+        <include
+            android:id="@+id/retake"
+            layout="@layout/retake_layout"
+            android:visibility="@{showRetake ? View.VISIBLE:View.GONE}"/>
 
     </LinearLayout>
 </layout>

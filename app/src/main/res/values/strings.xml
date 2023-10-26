@@ -38,5 +38,6 @@
     <string name="btnResulTwo">2</string>
     <string name="btnResultThree">3</string>
     <string name="btn_save">Save Image</string>
+    <string name="retake">Fish not found.\nPlease try again.</string>
 
 </resources>

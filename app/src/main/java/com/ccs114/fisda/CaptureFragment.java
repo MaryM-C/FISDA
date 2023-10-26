@@ -2,7 +2,6 @@ package com.ccs114.fisda;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -11,10 +10,8 @@ import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.FileUtils;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,7 +30,6 @@ import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -211,6 +207,8 @@ public class CaptureFragment extends Fragment {
                 String[] topFishSpecies = handler.getTop3FishSpecies();
                 String[] topConfidences = handler.getConfidences();
 
+
+
                 //Convert the image to byteArray to pass it to the OutputFragment
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 image.compress(Bitmap.CompressFormat.PNG, 100, stream);
@@ -218,7 +216,7 @@ public class CaptureFragment extends Fragment {
 
                 // Pass the data to the OutputFragment
                 OutputFragment outputFragment = new OutputFragment();
-                outputFragment.setArguments(fishInputInfo(byteArray, topFishSpecies, topConfidences, currentPhotoPath));
+                outputFragment.setArguments(fishInputInfo(byteArray, topFishSpecies, topConfidences, currentPhotoPath, handler));
 
                 displayFishInfo(outputFragment);
 
@@ -295,7 +293,7 @@ public class CaptureFragment extends Fragment {
      * @return A Bundle containing the image byte array, top fish species names, and confidence scores.
      */
     @NonNull
-    private Bundle fishInputInfo(byte[] fishByteArray, String[] topFishSpecies, String[] topConfidences, String imagepath) {
+    private Bundle fishInputInfo(byte[] fishByteArray, String[] topFishSpecies, String[] topConfidences, String imagepath, OutputHandler handler) {
         Bundle args = new Bundle();
 
         args.putByteArray("imagebytes", fishByteArray);
@@ -303,6 +301,11 @@ public class CaptureFragment extends Fragment {
         args.putStringArray("topConfidences", topConfidences);
         args.putString("imagepath", imagepath);
         args.putString("filename", imageFileName);
+
+        if(handler.getMaxConfidence() < 0.60) {
+            args.putBoolean("isNotFish", true);
+        }
+
         logBundleContents(args);
 
         return args;

@@ -54,17 +54,27 @@ public class OutputFragment extends Fragment {
             String[] topFishSpecies = args.getStringArray("topFishSpecies");
             String[] topConfidences = args.getStringArray("topConfidences");
             Boolean savedImage = args.getBoolean("Saved");
+            Boolean notFishImage = args.getBoolean("isNotFish");
 
             if(savedImage) {
                 bindData.btnSave.setVisibility(View.INVISIBLE);
             }
 
-            //button
-            bindData.btnResultOne.setEnabled(false);
-            //Image from the user
-            displayImage(bindData.imgInputFish, bindData.imgFishSpecies);
 
-            displayFishInfo(topFishSpecies[0], topConfidences[0]);
+            if(notFishImage) {
+                hideButtonResults();
+                showDefaultImage();
+                bindData.setShowRetake(true);
+            } else {
+                //button
+                bindData.btnResultOne.setEnabled(false);
+                //Image from the user
+                displayImage(bindData.imgInputFish, bindData.imgFishSpecies);
+                displayFishInfo(topFishSpecies[0], topConfidences[0]);
+                bindData.setShowDescription(true);
+            }
+
+
 
 
             bindData.btnResultOne.setOnClickListener(view1 -> {
@@ -122,19 +132,39 @@ public class OutputFragment extends Fragment {
         return view;
     }
 
+    private void showDefaultImage() {
+        byte[] byteArray = args.getByteArray("imagebytes");
+        Bitmap image = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+
+        bindData.imgInputFish.setImageBitmap(image);
+        bindData.imgFishSpecies.setImageBitmap(image);
+    }
+
+    private void hideButtonResults() {
+        bindData.btnSave.setVisibility(View.INVISIBLE);
+        bindData.btnResultOne.setVisibility(View.INVISIBLE);
+        bindData.btnResultTwo.setVisibility(View.INVISIBLE);
+        bindData.btnResultThree.setVisibility(View.INVISIBLE);
+
+        bindData.description.getRoot().setVisibility(View.INVISIBLE);
+
+        bindData.lblConfidence.setVisibility(View.INVISIBLE);
+        bindData.textView.setVisibility(View.INVISIBLE);
+    }
+
     private void displayFishInfo(String fishName, String confidence) {
         fishDataManager.getFishData(fishName, new FishDataManager.FishDataListener() {
             public void onFishDataLoaded(Fish fish) {
 
                 bindData.setConfidence(confidence + "%");
-                bindData.scrlInfo.setEnglishName(fishName);
+                bindData.description.setEnglishName(fishName);
 
                 Log.d("OutputContent", "Fish name: " + fishName + " confidence: " + confidence + "%" );
 
                 displayBasicInfo(bindData, fish);
                 displayTaxonomy(bindData, fish);
 
-                bindData.scrlInfo.setShortDescription(fish.getShortDescription());
+                bindData.description.setShortDescription(fish.getShortDescription());
 
                 displayBioInfo(bindData, fish);
 
@@ -147,9 +177,9 @@ public class OutputFragment extends Fragment {
                 imagePopup.setWindowHeight(750); // Optional
                 imagePopup.setWindowWidth(900); // Optional
                 imagePopup.initiatePopup(image);
-                Picasso.get().load(fish.getImg1()).into(bindData.scrlInfo.imgMImages1);
-                Picasso.get().load(fish.getImg2()).into(bindData.scrlInfo.imgMImages2);
-                Picasso.get().load(fish.getImg3()).into(bindData.scrlInfo.imgMImages3);
+                Picasso.get().load(fish.getImg1()).into(bindData.description.imgMImages1);
+                Picasso.get().load(fish.getImg2()).into(bindData.description.imgMImages2);
+                Picasso.get().load(fish.getImg3()).into(bindData.description.imgMImages3);
 
             }
             public void onFishDataNotFound() {
@@ -161,27 +191,27 @@ public class OutputFragment extends Fragment {
             }
 
             private void displayBasicInfo(FragmentOutputBinding bindData, Fish fish) {
-                bindData.scrlInfo.setLocalName(fish.getLocalName());
-                bindData.scrlInfo.setCommonName(fish.getCommonName());
-                bindData.scrlInfo.setEdibility(fish.getEdibility());
-                bindData.scrlInfo.setCategory(fish.getCategory());
+                bindData.description.setLocalName(fish.getLocalName());
+                bindData.description.setCommonName(fish.getCommonName());
+                bindData.description.setEdibility(fish.getEdibility());
+                bindData.description.setCategory(fish.getCategory());
             }
 
             private void displayTaxonomy(FragmentOutputBinding bindData, Fish fish) {
-                bindData.scrlInfo.setVarClass(fish.getTClass());
-                bindData.scrlInfo.setOrder(fish.getOrder());
-                bindData.scrlInfo.setFamily(fish.getFamily());
-                bindData.scrlInfo.setGenus(fish.getGenus());
-                bindData.scrlInfo.setSciName(fish.getScientificName());
+                bindData.description.setVarClass(fish.getTClass());
+                bindData.description.setOrder(fish.getOrder());
+                bindData.description.setFamily(fish.getFamily());
+                bindData.description.setGenus(fish.getGenus());
+                bindData.description.setSciName(fish.getScientificName());
             }
 
             private void displayBioInfo(FragmentOutputBinding bindData, Fish fish) {
-                bindData.scrlInfo.setMaxLength(fish.getMaxLength());
-                bindData.scrlInfo.setMaxWeight(fish.getMaxWeight());
-                bindData.scrlInfo.setSize(fish.getSize());
-                bindData.scrlInfo.setEnvironment(fish.getEnvironment());
-                bindData.scrlInfo.setTemperature(fish.getTemperature());
-                bindData.scrlInfo.setDiet(fish.getDiet());
+                bindData.description.setMaxLength(fish.getMaxLength());
+                bindData.description.setMaxWeight(fish.getMaxWeight());
+                bindData.description.setSize(fish.getSize());
+                bindData.description.setEnvironment(fish.getEnvironment());
+                bindData.description.setTemperature(fish.getTemperature());
+                bindData.description.setDiet(fish.getDiet());
             }
         });
     }
