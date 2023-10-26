@@ -11,11 +11,32 @@ import java.util.Locale;
 
 public class OutputHandler {
     private final float[] confidence;
-    private static final String[] fishSpeciesNames = {"Big Head Carp", "Blackchin Tilapia", "Carp", "Catfish", "Climbing Perch",
-            "Freshwater Eel", "Goby", "Gold Fish", "Gourami", "Indian Carp", "Indio-Pacific Tarpon",
-            "Jaguar Guapote", "Janitor Fish", "Knife Fish", "Manila Catfish", "Milkfish",
-            "Mosquito Fish", "Mudfish", "Mullet", "Scat Fish", "Silver Barb", "Silver Carp",
-            "Silver Perch", "Tenpounder", "Tilapia"};
+    private static final String[] fishSpeciesNames = {
+            "Big Head Carp",
+            "Blackchin Tilapia",
+            "Carp",
+            "Catfish",
+            "Climbing Perch",
+            "Freshwater Eel",
+            "Goby",
+            "Gold Fish",
+            "Gourami",
+            "Indian Carp",
+            "Indo-Pacific Tarpon",
+            "Janitor Fish",
+            "Juguar Guapote",
+            "Knife Fish",
+            "Manila Catfish",
+            "Milkfish",
+            "Mosquito Fish",
+            "Mudfish",
+            "Mullet",
+            "Scat Fish",
+            "Silver Barb",
+            "Silver Carp",
+            "Silver Perch",
+            "Tenpounder",
+            "Tilapia"};
 
     public OutputHandler(float[] confidence) {
         this.confidence = confidence;
@@ -38,7 +59,7 @@ public class OutputHandler {
     }
 
     //Returns maximum confidence value
-    public float getMaximumValue() {
+    public float getMaxConfidence() {
         float maxValue = confidence[0];
 
         // Loop through confidence values to find the maximum
