@@ -15,4 +15,4 @@
 local.properties
 
 # The CNN Model
-app/src/main/ml/fishda_model_v1.tflite
+/app/src/main/ml/fishda_model_v1.tflite
