@@ -113,7 +113,8 @@ public class CollectionsAdapter extends RecyclerView.Adapter<CollectionsAdapter.
                outputFragment.setArguments(args);
 
                ((FragmentActivity) view.getContext()).getSupportFragmentManager().beginTransaction()
-                       .replace(R.id.container, outputFragment)
+                       .replace(R.id.container, outputFragment, "OutputFragment")
+                       .addToBackStack("OutputFragment")
                        .commit();
            }
        });

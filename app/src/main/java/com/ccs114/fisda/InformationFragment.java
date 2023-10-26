@@ -74,8 +74,7 @@ public class InformationFragment extends AppCompatActivity {
         });
 
         bindData.btnBack.setOnClickListener(view14 -> {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
+           finish();
         });
 
 

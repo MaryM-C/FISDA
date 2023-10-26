@@ -59,12 +59,10 @@ public class OutputFragment extends Fragment {
                 bindData.btnSave.setVisibility(View.INVISIBLE);
             }
 
-
             //button
             bindData.btnResultOne.setEnabled(false);
             //Image from the user
             displayImage(bindData.imgInputFish, bindData.imgFishSpecies);
-
 
             displayFishInfo(topFishSpecies[0], topConfidences[0]);
 
@@ -93,11 +91,14 @@ public class OutputFragment extends Fragment {
             });
 
             bindData.btnBack.setOnClickListener(view14 -> {
-                CaptureFragment captureFragment = new CaptureFragment();
+//                CaptureFragment captureFragment = new CaptureFragment();
+//                FragmentManager manager = requireActivity().getSupportFragmentManager();
+//                FragmentTransaction transaction = manager.beginTransaction();
+//                transaction.replace(R.id.container, captureFragment);
+//                transaction.commit();
                 FragmentManager manager = requireActivity().getSupportFragmentManager();
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.replace(R.id.container, captureFragment);
-                transaction.commit();
+                manager.popBackStack();
+
             });
 
             bindData.imgInputFish.setOnClickListener(view15 -> imagePopup.viewPopup());
@@ -141,7 +142,11 @@ public class OutputFragment extends Fragment {
 
 
                 //More Images
-                imagePopup.initiatePopup(bindData.imgInputFish.getDrawable());
+                byte[] byteArray = args.getByteArray("imagebytes");
+                Drawable image = new BitmapDrawable(getResources(),BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length));
+                imagePopup.setWindowHeight(750); // Optional
+                imagePopup.setWindowWidth(900); // Optional
+                imagePopup.initiatePopup(image);
                 Picasso.get().load(fish.getImg1()).into(bindData.scrlInfo.imgMImages1);
                 Picasso.get().load(fish.getImg2()).into(bindData.scrlInfo.imgMImages2);
                 Picasso.get().load(fish.getImg3()).into(bindData.scrlInfo.imgMImages3);
@@ -190,16 +195,18 @@ public class OutputFragment extends Fragment {
             float scaleX = (float) 900 / image.getWidth();
             float scaleY = (float) 750 / image.getHeight();
 
+            float scale = Math.min(scaleX, scaleY);
+
             // Create a matrix for the scaling transformation
             Matrix matrix = new Matrix();
-            matrix.postScale(scaleX, scaleY);
+            matrix.postScale(scale, scale);
 
             // Create a new Bitmap with the desired dimensions
             Bitmap resizedImage = Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, true);
 
             imageView.setImageBitmap(resizedImage);
-            imagePopup.setWindowHeight(resizedImage.getHeight()); // Optional
-            imagePopup.setWindowWidth(resizedImage.getWidth()); // Optional
+//            imagePopup.setWindowHeight(resizedImage.getHeight()); // Optional
+//            imagePopup.setWindowWidth(resizedImage.getWidth()); // Optional
             Drawable imgDrawable = new BitmapDrawable(resizedImage);
             bindData.imgInputFish.setImageDrawable(imgDrawable);
         }

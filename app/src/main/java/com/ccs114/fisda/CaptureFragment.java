@@ -380,7 +380,8 @@ public class CaptureFragment extends Fragment {
     private void displayFishInfo(OutputFragment outputFragment) {
         FragmentManager manager = requireActivity().getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.container, outputFragment);
+        transaction.replace(R.id.container, outputFragment, "OutputFragment");
+        transaction.addToBackStack("OutputFragment");
         transaction.commit();
     }
 }
