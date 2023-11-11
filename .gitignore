@@ -14,5 +14,3 @@
 .cxx
 local.properties
 
-# The CNN Model
-/app/src/main/ml/fishda_model_v1.tflite
