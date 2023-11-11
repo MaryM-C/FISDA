@@ -29,8 +29,8 @@ public class OutputHandlerTests {
         return Stream.of(
                 Arguments.of(new float[] { 0.5f, 0.7f, 0.3f, 0.8f, 0.2f }, //confidences
                         new int[] { 3, 1, 0 }), //Index of the top three highest confidence
-                Arguments.of(new float[] { 0.1f, 0.2f, 0.3f, 0.4f, 0.5f },
-                        new int[] { 4, 3, 2 }),
+                Arguments.of(new float[] { 0.12f, 0.32f, 0.03f, 0.4f, 0.5f },
+                        new int[] { 4, 3, 1}),
                 Arguments.of(new float[] { 0.01f, 0.12f, 0.23f, 0.11f, 0.59f },
                         new int[] { 4, 2, 1})
         );
@@ -55,13 +55,16 @@ public class OutputHandlerTests {
         return Stream.of(
                 Arguments.of(
                         new float[] {0.1f, 0.2f, 0.3f}, // confidences
-                        new String[] {"10.00", "20.00", "30.00"}), //Formatted Strings
+                        new int[] {2,1,0}, //indices
+                        new String[] {"30.00", "20.00", "10.00"}), //Formatted Strings
                 Arguments.of(
-                        new float[] {0.99f, 0.21f, 0.32f}, // confidences
-                        new String[] {"99.00", "21.00", "32.00"}),//Formatted Strings
+                        new float[] {0.99f, 0.21f, 0.32f},
+                        new int[] {0,2,1},
+                        new String[] {"99.00", "32.00", "21.00"}),
                 Arguments.of(
-                        new float[] {0.11f, 0.12f, 0.31f}, // confidences
-                        new String[] {"11.00", "12.00", "31.00"})//Formatted Strings
+                        new float[] {0.11f, 0.02f, 0.31f},
+                        new int[] {2,0,1},
+                        new String[] {"31.00", "11.00", "2.00"})
                 );
     }
 
@@ -98,8 +101,9 @@ public class OutputHandlerTests {
 
     @ParameterizedTest
     @MethodSource("testDataForGetConfidencesAsFormattedString")
-    public void getConfidencesAsFormattedString_shouldReturnIndicatedFormatForConfidences(float[] confidences, String[] expectedStrings) {
-        String[] actualStrings = handler.getConfidencesAsFormattedString(confidences);
+    public void getConfidencesAsFormattedString_shouldReturnIndicatedFormatForConfidences(float[] confidences, int[] indices,
+            String[] expectedStrings) {
+        String[] actualStrings = handler.getConfidencesAsFormattedString(confidences, indices);
 
         assertArrayEquals(expectedStrings, actualStrings, "Formatted strings are not the same");
 

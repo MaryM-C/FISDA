@@ -9,7 +9,7 @@ import java.util.TreeMap;
  */
 public class OutputHandler {
 
-    private float[] confidence ;
+    private static float[] confidence ;
     private static final String[] fishSpeciesNames = {
             "Big Head Carp",
             "Blackchin Tilapia",
@@ -70,7 +70,7 @@ public class OutputHandler {
      * @param confidence An array of float values representing confidence levels
      * @return An array of integers containing the indices of the top three predictions.
      */
-    public int[] computeTopIndices(float[] confidence) {
+    public static int[] computeTopIndices(float[] confidence) {
         TreeMap<Float, Integer> sortedMap = new TreeMap<>();
 
         for (int i = 0; i < confidence.length; i++) {
@@ -96,7 +96,7 @@ public class OutputHandler {
      * @param topIndexPredictions an array containing indices of the top 3 highest confidence value
      * @return An array of strings containing the fish names
      */
-    public String[] getTopFishSpeciesName(int[] topIndexPredictions) {
+    public static String[] getTopFishSpeciesName(int[] topIndexPredictions) {
         String[] topFishSpecies = new String[3];
 
         for (int i = 0; i < topFishSpecies.length; i++) {
@@ -111,11 +111,11 @@ public class OutputHandler {
      * @param confidence An array of float values representing confidence levels
      * @return An array of strings containing formatted confidence values (in percentage) for the top 3 predicted fish species.
      */
-    public String[] getConfidencesAsFormattedString(float[] confidence) {
+    public static String[] getConfidencesAsFormattedString(float[] confidence, int[] topIndices) {
         String[] formattedConfidences = new String[3];
 
         for (int i = 0; i < formattedConfidences.length; i++) {
-            float confidenceValue = confidence[i] * 100;
+            float confidenceValue = confidence[topIndices[i]] * 100;
             formattedConfidences[i] = String.format(Locale.getDefault(), "%.2f", confidenceValue);
         }
 
