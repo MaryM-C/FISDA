@@ -160,7 +160,6 @@ public class CaptureFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
-
         if (resultCode == Activity.RESULT_OK) {
             Toast.makeText(getContext(), "activity ok", Toast.LENGTH_LONG).show();
 
@@ -189,11 +188,6 @@ public class CaptureFragment extends Fragment {
                     currentPhotoPath = saveImageToCameraDirectory(image, "new");
                     imageFileName = getImageFileName(currentPhotoPath);
 
-
-
-
-
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -203,10 +197,10 @@ public class CaptureFragment extends Fragment {
 
                 //Classify the fish and return the top three results
                 Bitmap testImage = ThumbnailUtils.extractThumbnail(image, imageSize, imageSize);
-                OutputHandler handler = classifyImage(testImage);
-                String[] topFishSpecies = handler.getTop3FishSpecies();
-                String[] topConfidences = handler.getConfidences();
-
+                OutputHandler handler = new OutputHandler();
+                int[] topIndeces = classifyImage(handler, testImage);
+                String[] topFishSpecies = handler.getTopFishSpeciesName(topIndeces);
+                String[] topConfidencesString = handler.getConfidencesAsFormattedString(handler.getConfidence());
 
 
                 //Convert the image to byteArray to pass it to the OutputFragment
@@ -216,7 +210,7 @@ public class CaptureFragment extends Fragment {
 
                 // Pass the data to the OutputFragment
                 OutputFragment outputFragment = new OutputFragment();
-                outputFragment.setArguments(fishInputInfo(byteArray, topFishSpecies, topConfidences, currentPhotoPath, handler));
+                outputFragment.setArguments(fishInputInfo(byteArray, topFishSpecies, topConfidencesString, currentPhotoPath, handler));
 
                 displayFishInfo(outputFragment);
 
@@ -259,9 +253,6 @@ public class CaptureFragment extends Fragment {
             }
     }
 
-
-
-
         private String getImagePathFromUri(Uri uri) {
         String[] projection = {MediaStore.Images.Media.DATA};
         Cursor cursor = requireContext().getContentResolver().query(uri, projection, null, null, null);
@@ -302,7 +293,7 @@ public class CaptureFragment extends Fragment {
         args.putString("imagepath", imagepath);
         args.putString("filename", imageFileName);
 
-        if(handler.getMaxConfidence() < 0.60) {
+        if(handler.computeTopConfidence(handler.getConfidence()) < 0.60) {
             args.putBoolean("isNotFish", true);
         }
 
@@ -317,8 +308,8 @@ public class CaptureFragment extends Fragment {
      * @param image The fish image to be classified.
      * @return An OutputHandler containing the top three fish species predictions and their confidence scores.
      */
-    private OutputHandler classifyImage(Bitmap image) {
-        OutputHandler handler = null;
+    private int[] classifyImage(OutputHandler handler, Bitmap image) {
+        int[] topPredictions = new int[3];
 
         try {
             FishdaModelV1 model = FishdaModelV1.newInstance(requireContext());
@@ -354,12 +345,13 @@ public class CaptureFragment extends Fragment {
             // Releases model resources if no longer used.
             model.close();
 
-            handler = new OutputHandler(confidence);
+            handler.setConfidence(confidence);
+            topPredictions = handler.computeTopIndices(handler.getConfidence());
 
         } catch (IOException e) {
             Log.e("ERROR", "Failed to load model/file" + e.getMessage());
         }
-        return handler;
+        return topPredictions;
     }
 
 

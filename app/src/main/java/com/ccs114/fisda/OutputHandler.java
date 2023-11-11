@@ -1,16 +1,15 @@
 package com.ccs114.fisda;
 
 import java.util.Locale;
+import java.util.TreeMap;
 
 /**
- * This file contains the 'OutputHandler' class, which processes confidence values for fish species
- * classification, providing methods to identify the highest confidence prediction and obtain the top
- * predicted fish species.
+ * The OutputHandler class processes confidence values for fish species classification and provides methods
+ * to identify the highest confidence prediction and obtain information about the top predicted fish species.
  */
-
-
 public class OutputHandler {
-    private final float[] confidence;
+
+    private float[] confidence ;
     private static final String[] fishSpeciesNames = {
             "Big Head Carp",
             "Blackchin Tilapia",
@@ -38,91 +37,86 @@ public class OutputHandler {
             "Tenpounder",
             "Tilapia"};
 
-    public OutputHandler(float[] confidence) {
+    public float[] getConfidence() {
+        return confidence;
+    }
+
+    public void setConfidence(float[] confidence) {
         this.confidence = confidence;
     }
 
-    // return the index of the fish species with the highest confidence
-    public int getMaxIndex() {
-        int maxIndex = 0;
+    /**
+     * Calculates and returns the highest confidence value from the given array.
+     *
+     * @param confidence An array of float values representing confidence levels
+     * @return The highest confidence value from the provided array.
+     */
+    public float computeTopConfidence(float[] confidence) {
         float maxValue = confidence[0];
 
-        // Loop through confidence values to find the maximum
         for (int i = 1; i < confidence.length; i++) {
-            if (confidence[i] > maxValue) { // Check if the current confidence is higher than the previous maximum
-                maxIndex = i; // Update the index of the fish species with the highest confidence
-                maxValue = confidence[i]; // Update the maximum confidence value
+            if (confidence[i] > maxValue) {
+                maxValue = confidence[i];
             }
         }
-        return maxIndex;
 
-    }
-
-    //Returns maximum confidence value
-    public float getMaxConfidence() {
-        float maxValue = confidence[0];
-
-        // Loop through confidence values to find the maximum
-        for (int i = 1; i < confidence.length; i++) {
-            if (confidence[i] > maxValue) { // Check if the current confidence is higher than the previous maximum
-                maxValue = confidence[i]; // Update the maximum confidence value
-            }
-        }
         return maxValue;
     }
 
-    //Returns the indices of the top 3 predicted fish species
-    //TODO : Optimize this code
-    public int[] getTop3Predictions() {
-        int[] topIndices = new int[3]; // Fish Species
-        float[] topValues = new float[3]; // Confidence Value
+
+    /**
+     * Retrieves the indices of the top three predictions based on the confidence values.
+     *
+     * @param confidence An array of float values representing confidence levels
+     * @return An array of integers containing the indices of the top three predictions.
+     */
+    public int[] computeTopIndices(float[] confidence) {
+        TreeMap<Float, Integer> sortedMap = new TreeMap<>();
 
         for (int i = 0; i < confidence.length; i++) {
-            for (int j = 0; j < topValues.length; j++) {
-                // Check if the current confidence is higher than the current top value
-                if (confidence[i] > topValues[j]) {
-                    for (int k = topValues.length - 1; k > j; k--) {
-                        // Shift values to make room for the new top value
-                        topValues[k] = topValues[k - 1];
-                        topIndices[k] = topIndices[k - 1];
-                    }
-                    topValues[j] = confidence[i];
-                    topIndices[j] = i;
-                    break;
-                }
-            }
+            sortedMap.put(confidence[i], i);
         }
+
+        int[] topIndices = new int[3];
+        int count = 0;
+
+        for (int index : sortedMap.descendingMap().values()) {
+            if (count >= topIndices.length) {
+                break;
+            }
+            topIndices[count++] = index;
+        }
+
         return topIndices;
     }
 
-    //Returns the names of the top 3 predicted fish species
-    public String[] getTop3FishSpecies() {
-        int[] topIndices = getTop3Predictions();
+    /**
+     * Retrieves the names of the top three predicted fish species.
+     *
+     * @param topIndexPredictions an array containing indices of the top 3 highest confidence value
+     * @return An array of strings containing the fish names
+     */
+    public String[] getTopFishSpeciesName(int[] topIndexPredictions) {
         String[] topFishSpecies = new String[3];
+
         for (int i = 0; i < topFishSpecies.length; i++) {
-            topFishSpecies[i] = fishSpeciesNames[topIndices[i]];
+            topFishSpecies[i] = fishSpeciesNames[topIndexPredictions[i]];
         }
         return topFishSpecies;
     }
 
-    //Returns the confidence value of the top 3 predicted fish species
-    private float[] getTop3Confidences() {
-        int[] topIndices = getTop3Predictions();
-        float[] topConfidences = new float[3];
-        for (int i = 0; i < topConfidences.length; i++) {
-            topConfidences[i] = confidence[topIndices[i]];
-        }
-        return topConfidences;
-    }
-
-    //Returns a formatted confidence value with only 2 decimals
-    public String[] getConfidences() {
-        int[] topIndices = getTop3Predictions();
+    /**
+     * Returns formatted confidence values for the top 3 predicted fish species with two decimal places.
+     *
+     * @param confidence An array of float values representing confidence levels
+     * @return An array of strings containing formatted confidence values (in percentage) for the top 3 predicted fish species.
+     */
+    public String[] getConfidencesAsFormattedString(float[] confidence) {
         String[] formattedConfidences = new String[3];
 
         for (int i = 0; i < formattedConfidences.length; i++) {
-            float confidenceValue = confidence[topIndices[i]] * 100; // Multiply by 100 for percentage
-            formattedConfidences[i] = String.format(Locale.getDefault(), "%.2f", confidenceValue); // Format to two decimal places
+            float confidenceValue = confidence[i] * 100;
+            formattedConfidences[i] = String.format(Locale.getDefault(), "%.2f", confidenceValue);
         }
 
         return formattedConfidences;
