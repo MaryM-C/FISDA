@@ -2,8 +2,7 @@ name: FiSDA Build and Test
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "master" ]
 
 jobs:
   build:
