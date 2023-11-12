@@ -1,9 +1,6 @@
 package com.ccs114.fisda;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static com.google.common.truth.Truth.assertThat;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -31,7 +28,7 @@ public class OutputHandlerTests {
                         new int[] { 3, 1, 0 }), //Index of the top three highest confidence
                 Arguments.of(new float[] { 0.12f, 0.32f, 0.03f, 0.4f, 0.5f },
                         new int[] { 4, 3, 1}),
-                Arguments.of(new float[] { 0.01f, 0.12f, 0.23f, 0.11f, 0.59f },
+                Arguments.of(new float[] { 0.01f, 0.12f, 0.23f, 0.11f, 0.59f},
                         new int[] { 4, 2, 1})
         );
     }
@@ -74,9 +71,9 @@ public class OutputHandlerTests {
         handler.setConfidence(inputArray);
         float actualValue = handler.computeTopConfidence(handler.getConfidence());
 
-        assertNotNull(inputArray, "Input array should not be null");
-        assertArrayEquals(inputArray, handler.getConfidence(), "The arrays are not the same");
-        assertEquals(expectedValue, actualValue, 0.0001, "Returns the wrong value of the highest confidence");
+        assertThat(inputArray).isNotNull();
+        assertThat(inputArray).isEqualTo(handler.getConfidence());
+        assertThat(expectedValue).isEqualTo(actualValue);
     }
 
     @ParameterizedTest
@@ -84,9 +81,9 @@ public class OutputHandlerTests {
     public void computeTopIndices_shouldReturnTheIndicesOfTheHighestConfidences(float[] inputArray, int[] expectedValues) {
         int[] actualValues = handler.computeTopIndices(inputArray);
 
-        assertEquals(expectedValues.length, actualValues.length, "Array lengths do not match");
-        assertArrayEquals(expectedValues, actualValues, "Returns the wrong array of top indices");
-
+        assertThat(actualValues).isNotEmpty();
+        assertThat(expectedValues.length).isEqualTo(actualValues.length);
+        assertThat(expectedValues).isEqualTo(actualValues);
     }
 
     @ParameterizedTest
@@ -94,9 +91,9 @@ public class OutputHandlerTests {
     public void getTopFishSpeciesName_shouldReturnTheFishNamesBasedOnTheArray(int[] topIndices, String[] expectedFishNames) {
         String[] actualFishNames = handler.getTopFishSpeciesName(topIndices);
 
-        assertNotNull(expectedFishNames, "No fish names were retrieved");
-        assertArrayEquals(expectedFishNames, actualFishNames, "Fish names did not match");
-
+        assertThat(expectedFishNames).isNotEmpty();
+        assertThat(expectedFishNames.length).isEqualTo(actualFishNames.length);
+        assertThat(expectedFishNames).isEqualTo(actualFishNames);
     }
 
     @ParameterizedTest
@@ -105,11 +102,11 @@ public class OutputHandlerTests {
             String[] expectedStrings) {
         String[] actualStrings = handler.getConfidencesAsFormattedString(confidences, indices);
 
-        assertArrayEquals(expectedStrings, actualStrings, "Formatted strings are not the same");
+        assertThat(actualStrings).isNotEmpty();
+        assertThat(expectedStrings.length).isEqualTo(actualStrings.length);
 
         for (String actualString : actualStrings) {
-            assertTrue(actualString.matches("\\d+\\.\\d{2}"), "Invalid format in formatted string: " + actualString);
+            assertThat(actualString).matches("\\d+\\.\\d{2}");
         }
-
     }
 }
