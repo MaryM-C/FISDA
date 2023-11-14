@@ -81,7 +81,7 @@ public class CollectionsDbHelper extends SQLiteOpenHelper {
             Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show();
 
         } else {
-            Toast.makeText(context, "Data Saved Successfully.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Image Saved Successfully.", Toast.LENGTH_SHORT).show();
 
         }
     }
