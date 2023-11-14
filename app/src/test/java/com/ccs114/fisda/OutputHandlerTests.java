@@ -73,7 +73,7 @@ public class OutputHandlerTests {
 
         assertThat(inputArray).isNotNull();
         assertThat(inputArray).isEqualTo(handler.getConfidence());
-        assertThat(expectedValue).isEqualTo(actualValue);
+        assertThat(actualValue).isEqualTo(expectedValue);
     }
 
     @ParameterizedTest
@@ -82,8 +82,8 @@ public class OutputHandlerTests {
         int[] actualValues = handler.computeTopIndices(inputArray);
 
         assertThat(actualValues).isNotEmpty();
-        assertThat(expectedValues.length).isEqualTo(actualValues.length);
-        assertThat(expectedValues).isEqualTo(actualValues);
+        assertThat(actualValues.length).isEqualTo(expectedValues.length);
+        assertThat(actualValues).isEqualTo(expectedValues);
     }
 
     @ParameterizedTest
@@ -91,9 +91,9 @@ public class OutputHandlerTests {
     public void getTopFishSpeciesName_shouldReturnTheFishNamesBasedOnTheArray(int[] topIndices, String[] expectedFishNames) {
         String[] actualFishNames = handler.getTopFishSpeciesName(topIndices);
 
-        assertThat(expectedFishNames).isNotEmpty();
-        assertThat(expectedFishNames.length).isEqualTo(actualFishNames.length);
-        assertThat(expectedFishNames).isEqualTo(actualFishNames);
+        assertThat(actualFishNames).isNotEmpty();
+        assertThat(actualFishNames.length).isEqualTo(expectedFishNames.length);
+        assertThat(actualFishNames).isEqualTo(expectedFishNames);
     }
 
     @ParameterizedTest
@@ -103,7 +103,7 @@ public class OutputHandlerTests {
         String[] actualStrings = handler.getConfidencesAsFormattedString(confidences, indices);
 
         assertThat(actualStrings).isNotEmpty();
-        assertThat(expectedStrings.length).isEqualTo(actualStrings.length);
+        assertThat(actualStrings.length).isEqualTo(expectedStrings.length);
 
         for (String actualString : actualStrings) {
             assertThat(actualString).matches("\\d+\\.\\d{2}");
