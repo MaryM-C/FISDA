@@ -58,7 +58,7 @@ public class CollectionFragment extends Fragment {
     void storeDataInArrays() {
         Cursor cursor = db.readAllData();
         if(cursor.getCount() == 0) {
-            Toast.makeText(getContext(), "Empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "No Images Saved", Toast.LENGTH_SHORT).show();
         } else {
             int size = 0;
             while (cursor.moveToNext()) {
