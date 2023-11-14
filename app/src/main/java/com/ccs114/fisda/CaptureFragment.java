@@ -52,6 +52,7 @@ public class CaptureFragment extends Fragment {
     private static final int REQUEST_CAMERA_PERMISSION = 100;
     private static final int REQUEST_IMAGE_CAPTURE = 3;
     private static final int REQUEST_PICK_IMAGE = 1;
+    private static final int REQUEST_CAMERA_STORAGE_PERMISSION = 101;
     private final int imageSize = 224;
 
     String imageFileName;
@@ -76,7 +77,7 @@ public class CaptureFragment extends Fragment {
 
         View view = bindData.getRoot();
 
-        bindData.btnCamera.setOnClickListener(view1 -> checkAndRequestCamaeraPermissions());
+        bindData.btnCamera.setOnClickListener(view1 -> askPermissions());
 
         bindData.btnGallery.setOnClickListener(view1 -> {
             //Launches Gallery
@@ -87,28 +88,76 @@ public class CaptureFragment extends Fragment {
         return view;
     }
 
-    private void checkAndRequestCamaeraPermissions() {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+    void askPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            // Check for CAMERA permission
             if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) ==
                     PackageManager.PERMISSION_GRANTED) {
-                // Both permissions are granted, so you can launch the camera
+                // CAMERA permission is granted, launch the camera
                 dispatchTakePictureIntent();
+            } else {
+                // Request CAMERA permission
+                requestCameraPermission();
             }
-        }
-        else if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) ==
-                    PackageManager.PERMISSION_GRANTED &&  ActivityCompat.checkSelfPermission(requireContext(),
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-
+        } else {
+            // Check for CAMERA and WRITE_EXTERNAL_STORAGE permissions
+            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) ==
+                    PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+                            PackageManager.PERMISSION_GRANTED) {
+                // Both permissions are granted, launch the camera
                 dispatchTakePictureIntent();
-        }
-        else {
-            // Request both CAMERA and WRITE_EXTERNAL_STORAGE permissions
-            requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    REQUEST_CAMERA_PERMISSION);
+            } else {
+                // Request CAMERA and WRITE_EXTERNAL_STORAGE permissions
+                requestCameraAndStoragePermissions();
+            }
         }
     }
 
-    private void dispatchTakePictureIntent()  {
+    private void requestCameraAndStoragePermissions() {
+        requestPermissions(
+                new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                REQUEST_CAMERA_STORAGE_PERMISSION);
+    }
+
+    private void requestCameraPermission() {
+        requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == REQUEST_CAMERA_PERMISSION) {
+            // Check if CAMERA permission is granted
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // CAMERA permission granted, launch the camera
+                dispatchTakePictureIntent();
+            } else {
+                // CAMERA permission not granted, handle accordingly
+                // You may want to show a message or request the permission again
+                requestCameraPermission();
+            }
+        } else if (requestCode == REQUEST_CAMERA_STORAGE_PERMISSION) {
+            // Check if both CAMERA and WRITE_EXTERNAL_STORAGE permissions are granted
+            if (grantResults.length > 1 &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED &&
+                    grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                // Both permissions granted, launch the camera
+                dispatchTakePictureIntent();
+            } else {
+                // One or both permissions not granted, handle accordingly
+                // You may want to show a message or request the permissions again
+                requestCameraAndStoragePermissions();
+            }
+        }
+    }
+
+
+
+
+    public void dispatchTakePictureIntent()  {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(requireActivity().getPackageManager()) != null) {
@@ -130,7 +179,7 @@ public class CaptureFragment extends Fragment {
         }
     }
 
-    private File createImageFile() throws IOException {
+    File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         String imageFileName = "FiSDA" + timeStamp + "_";
@@ -152,7 +201,7 @@ public class CaptureFragment extends Fragment {
      *
      * @param file the new created image from Camera
      */
-    private void scanFile(File file) {
+    void scanFile(File file) {
         String mimeType  ="image/jpeg";
         MediaScannerConnection
                 .scanFile(getContext(), new String[] {file.getAbsolutePath()},
@@ -174,7 +223,7 @@ public class CaptureFragment extends Fragment {
             if (requestCode == REQUEST_IMAGE_CAPTURE) {
                 image = handleImageCapture();
             } else if (requestCode == REQUEST_PICK_IMAGE) {
-                image = handleImagePick(requireNonNull(data));
+                image = handleImagePick((data));
             }
 
             if (image != null) {
@@ -204,7 +253,8 @@ public class CaptureFragment extends Fragment {
 
         byte[] byteArray = convertImageToByteArray(image);
         OutputFragment outputFragment = new OutputFragment();
-        outputFragment.setArguments(fishInputInfo(byteArray, topFishSpecies, topConfidencesString, currentPhotoPath, handler));
+        outputFragment.setArguments(fishInputInfo(byteArray, topFishSpecies,
+                topConfidencesString, currentPhotoPath, imageFileName, handler));
 
         displayFishInfo(outputFragment);
     }
@@ -238,7 +288,7 @@ public class CaptureFragment extends Fragment {
             image = BitmapFactory.decodeFile(currentPhotoPath);
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(getContext(), "Failed to Capture Image", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "Failed to capture Image", Toast.LENGTH_LONG).show();
         }
 
         imageFileName = getImageFileName(currentPhotoPath);
@@ -282,11 +332,13 @@ public class CaptureFragment extends Fragment {
      *
      * @param fishByteArray  Byte array representing the fish image.
      * @param topFishSpecies An array containing the top 3 fish species names with the highest confidence.
-     * @param topConfidences  An array containing the corresponding top 3 confidence scores for each fish species.
+     * @param topConfidences An array containing the corresponding top 3 confidence scores for each fish species.
+     * @param imageFileName
      * @return A Bundle containing the image byte array, top fish species names, and confidence scores.
      */
     @NonNull
-    private Bundle fishInputInfo(byte[] fishByteArray, String[] topFishSpecies, String[] topConfidences, String imagepath, OutputHandler handler) {
+    Bundle fishInputInfo(byte[] fishByteArray, String[] topFishSpecies, String[] topConfidences,
+                         String imagepath, String imageFileName, OutputHandler handler) {
         Bundle args = new Bundle();
 
         args.putByteArray("imagebytes", fishByteArray);
@@ -295,14 +347,9 @@ public class CaptureFragment extends Fragment {
         args.putString("imagepath", imagepath);
         args.putString("filename", imageFileName);
 
-        Log.d("top confidence", String.valueOf(handler.computeTopConfidence(handler.getConfidence())));
-
         if(handler.computeTopConfidence(handler.getConfidence()) < 0.60) {
             args.putBoolean("isNotFish", true);
         }
-
-        logBundleContents(args);
-
         return args;
     }
 
@@ -322,7 +369,6 @@ public class CaptureFragment extends Fragment {
             TensorBuffer inputFeature0 = TensorBuffer.createFixedSize(new int[]{1, 224, 224, 3}, DataType.FLOAT32);
             ByteBuffer byteBuffer = ByteBuffer.allocateDirect(4 * imageSize * imageSize * 3);
             byteBuffer.order(ByteOrder.nativeOrder());
-
 
             int[] intValues = new int[imageSize * imageSize];
             image.getPixels(intValues, 0, image.getWidth(), 0,0, image.getWidth(), image.getHeight());
@@ -346,11 +392,14 @@ public class CaptureFragment extends Fragment {
 
             float[] confidence = outputFeature0.getFloatArray();
 
+            for(int i = 0; i < confidence.length; i++) {
+                Log.d("Confidence Values", String.valueOf(confidence[i]));
+            }
+
             // Releases model resources if no longer used.
             model.close();
 
             handler.setConfidence(confidence);
-            Log.d("Top Confidences[0]", String.valueOf(handler.getConfidence()[0]));
             topPredictions = handler.computeTopIndices(handler.getConfidence());
 
         } catch (IOException e) {
@@ -358,7 +407,6 @@ public class CaptureFragment extends Fragment {
         }
         return topPredictions;
     }
-
 
     /**
      * Logs the contents of the fish information bundle before passing it to the OutputFragment
