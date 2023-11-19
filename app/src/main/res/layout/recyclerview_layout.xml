@@ -10,12 +10,13 @@
         android:layout_width="161dp"
         android:layout_height="229dp"
         android:layout_marginLeft="5dp"
-        android:layout_marginTop="10dp"
-        android:elevation="5dp"
-        app:cardCornerRadius="5dp"
+        android:layout_marginTop="15dp"
+        app:cardCornerRadius="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints">
+        tools:ignore="MissingConstraints"
+        android:outlineAmbientShadowColor="@color/black"
+        >
 
 
         <RelativeLayout
@@ -25,20 +26,18 @@
             <ImageView
                 android:id="@+id/imgViewFish"
                 android:layout_width="match_parent"
-                android:layout_height="143dp"
-                android:layout_marginTop="10dp"
-                android:adjustViewBounds="true"
-                android:scaleType="fitCenter"
-                tools:srcCompat="@tools:sample/avatars" />
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_centerInParent="true"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="10dp"
                 android:orientation="vertical"
-                android:padding="5dp"
-                android:paddingLeft="5dp">
+                android:layout_marginLeft="10dp">
 
 
                 <TextView
@@ -46,7 +45,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Black-chin Tilapia"
-                    android:textSize="16dp"
+                    android:textColor="@color/white"
+                    android:textSize="17sp"
                     android:textStyle="bold"></TextView>
 
                 <TextView
@@ -55,6 +55,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/commonName"
                     android:text="Local Name"
+                    android:textColor="@color/white"
                     android:textSize="15sp"
                     android:textStyle="italic"></TextView>
 
@@ -64,6 +65,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/localName"
                     android:text="Category"
+                    android:textColor="@color/white"
                     android:textSize="15sp"
                     android:textStyle="normal"></TextView>
 

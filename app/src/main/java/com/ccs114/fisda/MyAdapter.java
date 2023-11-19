@@ -51,7 +51,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         try{
             //load the image using picaso from the web
-            Picasso.get().load(image).resize(250, 250).into(holder.image);
+            Picasso.get().load(image).into(holder.image);
         }
         catch (Exception e){
 
