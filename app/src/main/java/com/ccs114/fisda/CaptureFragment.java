@@ -392,10 +392,6 @@ public class CaptureFragment extends Fragment {
 
             float[] confidence = outputFeature0.getFloatArray();
 
-            for(int i = 0; i < confidence.length; i++) {
-                Log.d("Confidence Values", String.valueOf(confidence[i]));
-            }
-
             // Releases model resources if no longer used.
             model.close();
 
