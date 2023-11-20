@@ -22,7 +22,7 @@ public class OutputHandler {
             "Gourami",
             "Indian Carp",
             "Indo-Pacific Tarpon",
-            "Juguar Guapote",
+            "Jaguar Guapote",
             "Janitor Fish",
             "Knife Fish",
             "Manila Catfish",
