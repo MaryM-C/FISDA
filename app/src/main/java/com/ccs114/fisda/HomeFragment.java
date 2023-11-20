@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
-    //Getting firebase database reference to communicate firebase datanbase
+    //Getting firebase database reference to communicate firebase database
     private DatabaseReference databaseReference;
     private RecyclerView recyclerView;
 
