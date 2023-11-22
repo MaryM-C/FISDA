@@ -2,16 +2,23 @@ package com.ccs114.fisda;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ccs114.fisda.databinding.FragmentCaptureBinding;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -20,11 +27,17 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import androidx.databinding.DataBindingUtil;
+import com.ccs114.fisda.databinding.FragmentHomeBinding;
 
 public class HomeFragment extends Fragment {
     //Getting firebase database reference to communicate firebase database
     private DatabaseReference databaseReference;
     private RecyclerView recyclerView;
+    Toolbar toolbar;
+    FragmentHomeBinding bindData;
+
+
 
 
     //creating list for MyItems to store fish details
@@ -34,7 +47,11 @@ public class HomeFragment extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        bindData =
+                DataBindingUtil.inflate(inflater, R.layout.fragment_home,  container, false);
+        View view = bindData.getRoot();
+
+
 
         //To read or write data from the database, you need an instance of DatabaseReference
         databaseReference= FirebaseDatabase.getInstance().getReference();
@@ -43,42 +60,50 @@ public class HomeFragment extends Fragment {
 
 
         //getting recyclerview in xml file
-        recyclerView = view.findViewById(R.id.collectionRecyclerView);
-
-
+        setHasOptionsMenu(true);
 
         //setting recyclerview size fixed for every item in the recycler view
-        recyclerView.setHasFixedSize(true);
+
+        bindData.collectionRecyclerView.setHasFixedSize(true);
         //setting layout manager to the recylerview ex. LinearLayoutManager (vertical view)
-        //recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
-        gridLayoutManager.setOrientation(recyclerView.VERTICAL);
-        recyclerView.setLayoutManager(gridLayoutManager);
+        gridLayoutManager.setOrientation(bindData.collectionRecyclerView.VERTICAL);
+        bindData.collectionRecyclerView.setLayoutManager(gridLayoutManager);
 
 
-
-
-        // Fetch data from Firebase and update the dataList.
-        fetchFirebaseData();
-
-        SearchView searchView = view.findViewById(R.id.searchView);
-        // Add a TextChangeListener to the SearchView
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        bindData.titleToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                // Not needed for this case, as we want to perform filtering as the user types
+            public boolean onMenuItemClick(MenuItem item) {
+                if(item.getItemId()==R.id.toolbar_search) {
+                    MenuItem menuItem = bindData.titleToolbar.getMenu().findItem(R.id.toolbar_search);
+                    SearchView searchView = (SearchView) menuItem.getActionView();
+                    searchView.setQueryHint("Start typing to search fish names...");
+
+                    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                        @Override
+                        public boolean onQueryTextSubmit(String query) {
+                            // Not needed for this case, as we want to perform filtering as the user types
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onQueryTextChange(String newText) {
+                            // Perform filtering based on the search query and update the RecyclerView
+                            filterData(newText);
+                            return true;
+                        }
+                    });
+
+                    return true;
+                }
                 return false;
             }
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                // Perform filtering based on the search query and update the RecyclerView
-                filterData(newText);
-                return true;
-            }
+
         });
 
-
+        // Fetch data from Firebase and update the dataList.
+        fetchFirebaseData();
 
         return view;
     }
@@ -86,7 +111,6 @@ public class HomeFragment extends Fragment {
     private void filterData(String query) {
         // Create a new list to store filtered items based on the search query
         List<MyItems> filteredList = new ArrayList<>();
-
 
 
         // Loop through all items in the allItemsList and check if they match the search query
@@ -100,7 +124,8 @@ public class HomeFragment extends Fragment {
         }
 
         // Update the RecyclerView with the filtered data
-        recyclerView.setAdapter(new MyAdapter(filteredList, getActivity()));
+        bindData.collectionRecyclerView.setAdapter(new MyAdapter(filteredList, getActivity()));
+
     }
 
     private void fetchFirebaseData() {
@@ -131,7 +156,7 @@ public class HomeFragment extends Fragment {
 
                     }
                 }
-                recyclerView.setAdapter(new MyAdapter(myItemsList, getActivity()));
+                bindData.collectionRecyclerView.setAdapter(new MyAdapter(myItemsList, getActivity()));
 
             }
 
@@ -140,10 +165,5 @@ public class HomeFragment extends Fragment {
                 Toast.makeText(getActivity(), "Something went wrong!!!"+error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
-
-
-
-
     }
 }
