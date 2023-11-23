@@ -47,10 +47,8 @@ public class HomeFragment extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        bindData =
-                DataBindingUtil.inflate(inflater, R.layout.fragment_home,  container, false);
+        bindData = DataBindingUtil.inflate(inflater, R.layout.fragment_home,  container, false);
         View view = bindData.getRoot();
-
 
 
         //To read or write data from the database, you need an instance of DatabaseReference
@@ -59,7 +57,6 @@ public class HomeFragment extends Fragment {
         databaseReference.keepSynced(true);
 
 
-        //getting recyclerview in xml file
         setHasOptionsMenu(true);
 
         //setting recyclerview size fixed for every item in the recycler view
