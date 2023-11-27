@@ -1,12 +1,10 @@
 package com.ccs114.fisda;
 
-import static java.util.Objects.*;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
@@ -28,15 +26,20 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 //Data Binding
 import androidx.databinding.DataBindingUtil;
@@ -58,7 +61,7 @@ public class CaptureFragment extends Fragment {
     String imageFileName;
 
     String currentPhotoPath;
-
+    Uri photoURI = null;
 
     /**
      * Inflates the layout for the CaptureFragment, initializes UI elements, and sets up click listeners
@@ -170,8 +173,9 @@ public class CaptureFragment extends Fragment {
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(requireContext(),
+                photoURI = FileProvider.getUriForFile(requireContext(),
                         "com.ccs114.fisda.fileprovider", photoFile);
+                requireContext().grantUriPermission("com.ccs114.fisda", photoURI, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                 scanFile(photoFile);
@@ -218,16 +222,17 @@ public class CaptureFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-            Bitmap image = null;
 
-            if (requestCode == REQUEST_IMAGE_CAPTURE) {
-                image = handleImageCapture();
-            } else if (requestCode == REQUEST_PICK_IMAGE) {
-                image = handleImagePick((data));
+            if(requestCode == REQUEST_PICK_IMAGE) {
+                photoURI = Objects.requireNonNull(data).getData();
             }
 
-            if (image != null) {
-                prepareImageForDisplay(image);
+            if(photoURI != null) {
+                try {
+                    prepareImageForDisplay(photoURI);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             } else {
                 Log.d("ActivityResult", "Failed to retrieve the image.");
             }
@@ -244,104 +249,40 @@ public class CaptureFragment extends Fragment {
         }
     }
 
-    private void prepareImageForDisplay(Bitmap image) {
+    private void prepareImageForDisplay(Uri photoURI) throws IOException {
+        //Todo remove thumbnail
+
+        Bitmap image = MediaStore.Images.Media.getBitmap(requireContext().getContentResolver(), photoURI);
         Bitmap testImage = ThumbnailUtils.extractThumbnail(image, imageSize, imageSize);
+
         OutputHandler handler = new OutputHandler();
-        int[] topIndices = classifyImage(handler, testImage);
+        int[] topIndices = classifyImageConcurrent(handler, testImage);
         String[] topFishSpecies = OutputHandler.getTopFishSpeciesName(topIndices);
+        Log.d("topindices", String.valueOf(handler.getConfidence()[0]));
         String[] topConfidencesString = OutputHandler.getConfidencesAsFormattedString(handler.getConfidence(), topIndices);
 
-        byte[] byteArray = convertImageToByteArray(image);
         OutputFragment outputFragment = new OutputFragment();
-        outputFragment.setArguments(fishInputInfo(byteArray, topFishSpecies,
+        outputFragment.setArguments(fishInputInfo(photoURI, topFishSpecies,
                 topConfidencesString, currentPhotoPath, imageFileName, handler));
 
+
         displayFishInfo(outputFragment);
-    }
-
-    private byte[] convertImageToByteArray(Bitmap image) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.PNG, 100, stream);
-
-        return stream.toByteArray();
-    }
-
-    private Bitmap handleImagePick(Intent data) {
-        Bitmap image = null;
-        Uri dat = data.getData();
-
-        try {
-            image = MediaStore.Images.Media.getBitmap(requireContext().getContentResolver(), dat);
-            currentPhotoPath = saveImageToCameraDirectory(image);
-            imageFileName = getImageFileName(currentPhotoPath);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return image;
-    }
-
-    private Bitmap handleImageCapture() {
-        Bitmap image = null;
-
-        try {
-            image = BitmapFactory.decodeFile(currentPhotoPath);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(getContext(), "Failed to capture Image", Toast.LENGTH_LONG).show();
-        }
-
-        imageFileName = getImageFileName(currentPhotoPath);
-        return image;
-    }
-
-    // Save the image in the same directory as camera images and return the new path
-    private String saveImageToCameraDirectory(Bitmap image) throws IOException {
-            // Create a new file in the camera directory with the provided fileName
-            File imageFile = createImageFile();
-
-            try {
-                FileOutputStream fos = new FileOutputStream(imageFile);
-                image.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-                fos.flush();
-                fos.close();
-
-                // Notify the media scanner to scan the new image file
-                scanFile(imageFile);
-
-                // Return the path of the saved image
-                return imageFile.getAbsolutePath();
-            } catch (IOException e) {
-                e.printStackTrace();
-                Log.e("SaveImage", "Failed to save image: " + e.getMessage());
-                return null;
-            }
-    }
-
-    // Function to get the filename from the file path
-    private String getImageFileName(String imagePath) {
-        if (imagePath != null) {
-            File imageFile = new File(imagePath);
-            return imageFile.getName();
-        }
-        return null;
     }
 
     /**
      * Constructs a Bundle containing information about the captured fish image and its classification results.
      *
-     * @param fishByteArray  Byte array representing the fish image.
      * @param topFishSpecies An array containing the top 3 fish species names with the highest confidence.
      * @param topConfidences An array containing the corresponding top 3 confidence scores for each fish species.
-     * @param imageFileName
+     * @param imageFileName assigned filename of the image
      * @return A Bundle containing the image byte array, top fish species names, and confidence scores.
      */
     @NonNull
-    Bundle fishInputInfo(byte[] fishByteArray, String[] topFishSpecies, String[] topConfidences,
+    Bundle fishInputInfo(Uri photoURI, String[] topFishSpecies, String[] topConfidences,
                          String imagepath, String imageFileName, OutputHandler handler) {
         Bundle args = new Bundle();
 
-        args.putByteArray("imagebytes", fishByteArray);
+        args.putString("uri", photoURI.toString());
         args.putStringArray("topFishSpecies", topFishSpecies);
         args.putStringArray("topConfidences", topConfidences);
         args.putString("imagepath", imagepath);
@@ -351,6 +292,27 @@ public class CaptureFragment extends Fragment {
             args.putBoolean("isNotFish", true);
         }
         return args;
+    }
+    private int[] classifyImageConcurrent(final OutputHandler handler, final Bitmap image) {
+        long startTime = System.currentTimeMillis();
+        int[] topPredictions = new int[3];
+
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        try {
+            Future<int[]> future = executor.submit(() -> classifyImage(handler, image));
+
+            // Wait for the result with a timeout (adjust the timeout value as needed)
+            topPredictions = future.get(10000, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            Log.e("ERROR", "Error during image classification: " + e.getMessage());
+        } finally {
+            executor.shutdown(); // Shutdown the executor to release resources
+        }
+        long endTime = System.currentTimeMillis();
+        long duration = endTime - startTime;
+        Log.d("FunctionTime", "Time taken: " + duration + " milliseconds");
+
+        return topPredictions;
     }
 
     /**
@@ -373,14 +335,13 @@ public class CaptureFragment extends Fragment {
             int[] intValues = new int[imageSize * imageSize];
             image.getPixels(intValues, 0, image.getWidth(), 0,0, image.getWidth(), image.getHeight());
             int pixel = 0;
-
             // Iterate over each pixel and extract R, G, and B values. Add those values individually to the byte buffer
             for(int i = 0; i < imageSize; i++) {
                 for(int j = 0; j< imageSize; j++) {
                     int val = intValues[pixel++];
                     byteBuffer.putFloat(((val >> 16) & 0xFF) * (1.f / 255));
                     byteBuffer.putFloat(((val >> 8) & 0xFF) * (1.f / 255));
-                    byteBuffer.putFloat((val >> 0xFF) * (1.f / 255));
+                    byteBuffer.putFloat((val >> 31) * (1.f / 255));
                 }
             }
 
@@ -396,11 +357,12 @@ public class CaptureFragment extends Fragment {
             model.close();
 
             handler.setConfidence(confidence);
-            topPredictions = handler.computeTopIndices(handler.getConfidence());
+            topPredictions = OutputHandler.computeTopIndices(handler.getConfidence());
 
         } catch (IOException e) {
             Log.e("ERROR", "Failed to load model/file" + e.getMessage());
         }
+
         return topPredictions;
     }
 
