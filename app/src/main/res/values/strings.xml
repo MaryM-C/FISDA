@@ -19,12 +19,12 @@
 
     <string name="short_description">Short Description</string>
 
-    <string name="biological_information">Biological Information</string>
-    <string name="max_weight">Max. Weight:</string>
-    <string name="max_length">Max. Length:</string>
-    <string name="temperature">Temperature:</string>
-    <string name="environment">Environment:</string>
-    <string name="size">Size:</string>
+    <string name="biological_information">Biological Traits</string>
+    <string name="max_weight">Maximum Weight:</string>
+    <string name="max_length">Maximum Length:</string>
+    <string name="temperature">Temperature</string>
+    <string name="environment">Environment</string>
+    <string name="size">Average Size:</string>
     <string name="diet">Diet:</string>
     
     <string name="other_images">Other Images</string>
