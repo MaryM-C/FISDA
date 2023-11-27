@@ -2,38 +2,49 @@ package com.ccs114.fisda;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import android.content.Intent;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 import com.ccs114.fisda.databinding.InformationLayoutBinding;
+import com.codebyashish.autoimageslider.Enums.ImageScaleType;
+import com.codebyashish.autoimageslider.ExceptionsClass;
+import com.codebyashish.autoimageslider.Models.ImageSlidesModel;
 import com.squareup.picasso.Picasso;
+import java.util.ArrayList;
 
-public class InformationFragment extends AppCompatActivity {
+public class InformationFragment extends AppCompatActivity{
     InformationLayoutBinding bindData;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bindData = DataBindingUtil.setContentView(this, R.layout.information_layout);
-
         String commonName = getIntent().getStringExtra("commonname");
 
         FishDataManager fishDataManager = new FishDataManager();
         fishDataManager.getFishData(commonName, new FishDataManager.FishDataListener() {
             @Override
             public void onFishDataLoaded(Fish fish) {
-
+                Picasso.get().load(fish.getMainImage()).fit().into(bindData.mainImage);
                 displayBasicInfo(bindData, fish);
                 displayTaxonomy(bindData, fish);
                 bindData.scrlInfo.setShortDescription(fish.getShortDescription());
                 displayBioInfo(bindData, fish);
 
-                Picasso.get().load(fish.getMainImage()).into(bindData.mainImage);
-
                 //More Images
-                Picasso.get().load(fish.getImg1()).into(bindData.scrlInfo.imgMImages1);
-                Picasso.get().load(fish.getImg2()).into(bindData.scrlInfo.imgMImages2);
-                Picasso.get().load(fish.getImg3()).into(bindData.scrlInfo.imgMImages3);
+                ArrayList<ImageSlidesModel> resultsmodel = new ArrayList<>();
+                try {
+                    resultsmodel.add(new ImageSlidesModel(fish.getImg1(), ""));
+                    resultsmodel.add(new ImageSlidesModel(fish.getImg2(), ""));
+                    resultsmodel.add(new ImageSlidesModel(fish.getImg3(), ""));
+
+                } catch (ExceptionsClass e) {
+                    throw new RuntimeException(e);
+                }
+                bindData.scrlInfo.resultSlider.setImageList(resultsmodel, ImageScaleType.CENTER_CROP);
+                //TODO: Change the ugly animation
+                bindData.scrlInfo.resultSlider.setDefaultAnimation();
             }
 
             @Override
@@ -73,13 +84,7 @@ public class InformationFragment extends AppCompatActivity {
             }
         });
 
-        bindData.btnBack.setOnClickListener(view14 -> {
-           finish();
-        });
-
-
-        // Load the image using Picasso from the web
-        //Picasso.get().load(image).resize(250, 250).into(imageView);
+        bindData.btnBack.setOnClickListener(view1 -> finish());
 
     }
 }
