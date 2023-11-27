@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace 'com.ccs114.fisda'
-    compileSdk 33
+    compileSdk 34
 
     lint {
         baseline = file("line-baseline.xml")
@@ -15,8 +15,8 @@ android {
 
     defaultConfig {
         applicationId "com.ccs114.fisda"
-        minSdk 21
-        targetSdk 33
+        minSdk 26
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
@@ -39,12 +39,12 @@ android {
         mlModelBinding true
         dataBinding true
     }
-    aaptOptions {
-        noCompress "tflite"
-    }
 
     testOptions {
         unitTests.returnDefaultValues = true
+    }
+    androidResources {
+        noCompress 'tflite'
     }
 
 }
@@ -67,6 +67,9 @@ dependencies {
     implementation 'com.github.dhaval2404:imagepicker:2.1'
     implementation 'com.github.chathuralakmal:AndroidImagePopup:1.2.2'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
+    implementation 'com.ouattararomuald:slider-picasso:3.0.1'
+    implementation 'com.github.dangiashish:Auto-Image-Slider:1.0.4'
+    implementation 'com.makeramen:roundedimageview:2.3.0'
 
     //tensorflow dependencies
     implementation 'org.tensorflow:tensorflow-lite-support:0.1.0'
