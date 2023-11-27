@@ -33,12 +33,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="220dp"
                 android:contentDescription="TODO"
+                android:scaleType="centerCrop"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:srcCompat="@tools:sample/backgrounds/scenic"
-                android:scaleType="centerCrop"/>
+                tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/imgInputFish"
@@ -48,11 +48,13 @@
                 android:layout_marginTop="152dp"
                 android:clickable="false"
                 android:contentDescription="@string/common_name"
+                android:scaleType="centerCrop"
                 android:src="@drawable/wrong_image_4"
+                app:civ_border_color="@color/white"
+                app:civ_border_width="3dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:srcCompat="@tools:sample/backgrounds/scenic"
-                android:scaleType="centerCrop"/>
+                tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
             <ImageButton
                 android:id="@+id/btnBack"
@@ -60,7 +62,7 @@
                 android:layout_height="48dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
-                android:background="?attr/actionModeCloseDrawable"
+                android:background="@drawable/round_arrow_back_ios_24"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="SpeakableTextPresentCheck" />
@@ -73,6 +75,7 @@
                 android:layout_marginBottom="4dp"
                 android:text="@string/confidence"
                 android:textAlignment="center"
+                android:textColor="@color/white"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toTopOf="@+id/lblConfidence"
                 app:layout_constraintEnd_toEndOf="parent" />
@@ -89,59 +92,9 @@
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="32sp"
-                app:layout_constraintBottom_toTopOf="@+id/btnResultThree"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="@tools:sample/date/mmddyy" />
-
-            <Button
-                android:id="@+id/btnResultTwo"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="8dp"
-                android:background="@drawable/circular_button"
-                android:text="@string/btnResulTwo"
-                android:textSize="20sp"
-                app:layout_constraintEnd_toStartOf="@+id/btnResultThree"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/btnResultOne"
-                app:layout_constraintTop_toBottomOf="@+id/imgFishSpecies" />
-
-            <Button
-                android:id="@+id/btnResultOne"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="8dp"
-                android:background="@drawable/circular_button"
-                android:clickable="true"
-                android:enabled="true"
-                android:focusable="true"
-                android:text="@string/btnResultOne"
-                android:textSize="20sp"
-                app:layout_constraintEnd_toStartOf="@+id/btnResultTwo"
-                app:layout_constraintHorizontal_bias="0.91"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imgFishSpecies" />
-
-            <Button
-                android:id="@+id/btnResultThree"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="2"
-                android:background="@drawable/circular_button"
-                android:text="@string/btnResultThree"
-                android:textSize="20sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/btnResultTwo"
-                app:layout_constraintTop_toBottomOf="@+id/imgFishSpecies" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/btnSave"
@@ -156,6 +109,52 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/baseline_save_24"
                 app:tint="@color/frostee" />
+
+            <RadioGroup
+                android:id="@+id/btnResults"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imgFishSpecies">
+
+                <RadioButton
+                    android:id="@id/btnResultOne"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/left_selector"
+                    android:button="@color/transparent"
+                    android:checked="true"
+                    android:text="@string/btnResultOne"
+                    android:textAlignment="center"
+                    android:textColor="@drawable/text_selector"
+                    android:textSize="24sp" />
+
+                <RadioButton
+                    android:id="@+id/btnResultTwo"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/middle_selector"
+                    android:button="@color/transparent"
+                    android:text="@string/btnResulTwo"
+                    android:textAlignment="center"
+                    android:textColor="@drawable/text_selector"
+                    android:textSize="24sp" />
+
+                <RadioButton
+                    android:id="@+id/btnResultThree"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/right_selector"
+                    android:button="@color/transparent"
+                    android:text="@string/btnResultThree"
+                    android:textAlignment="center"
+                    android:textColor="@drawable/text_selector"
+                    android:textSize="24sp" />
+            </RadioGroup>
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
