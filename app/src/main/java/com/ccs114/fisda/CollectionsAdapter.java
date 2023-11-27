@@ -56,7 +56,7 @@ public class CollectionsAdapter extends RecyclerView.Adapter<CollectionsAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull CollectionsHolder holder, int position) {
-        holder.fileName.setText(String.valueOf(filename.get(position)));
+        holder.fileName.setText(String.valueOf(first_name.get(position)));
         holder.dateTaken.setText(String.valueOf(date_taken.get(position)));
         Uri imageUri = Uri.parse("file://" + image_path.get(position));  // Convert to Uri
        try {
