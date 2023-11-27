@@ -72,7 +72,7 @@ public class CollectionsDbHelper extends SQLiteOpenHelper {
         content.put(COLUMN_2ND_CONF, topConfidences[1]);
         content.put(COLUMN_3RD_CONF, topConfidences[2]);
 
-        content.put(COLUMN_DATE_TAKEN,new SimpleDateFormat("yyyy-MM-dd")
+        content.put(COLUMN_DATE_TAKEN,new SimpleDateFormat("dd-MMM-yyyy")
                 .format(Calendar.getInstance().getTime()));
 
         long result = db.insert(TABLE_NAME, null, content);
