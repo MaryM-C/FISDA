@@ -262,7 +262,7 @@ public class CaptureFragment extends Fragment {
         String[] topConfidencesString = OutputHandler.getConfidencesAsFormattedString(handler.getConfidence(), topIndices);
 
         OutputFragment outputFragment = new OutputFragment();
-        outputFragment.setArguments(fishInputInfo(photoURI, topFishSpecies,
+        outputFragment.setArguments(fishInputInfo(photoURI.toString(), topFishSpecies,
                 topConfidencesString, currentPhotoPath, imageFileName, handler));
 
 
@@ -278,11 +278,11 @@ public class CaptureFragment extends Fragment {
      * @return A Bundle containing the image byte array, top fish species names, and confidence scores.
      */
     @NonNull
-    Bundle fishInputInfo(Uri photoURI, String[] topFishSpecies, String[] topConfidences,
+    Bundle fishInputInfo(String photoURI, String[] topFishSpecies, String[] topConfidences,
                          String imagepath, String imageFileName, OutputHandler handler) {
         Bundle args = new Bundle();
 
-        args.putString("uri", photoURI.toString());
+        args.putString("uri", photoURI);
         args.putStringArray("topFishSpecies", topFishSpecies);
         args.putStringArray("topConfidences", topConfidences);
         args.putString("imagepath", imagepath);

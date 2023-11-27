@@ -7,11 +7,14 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -20,9 +23,18 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.databinding.DataBindingUtil;
 import com.ccs114.fisda.databinding.FragmentOutputBinding;
-
 import com.ceylonlabs.imageviewpopup.ImagePopup;
+import com.codebyashish.autoimageslider.Enums.ImageScaleType;
+import com.codebyashish.autoimageslider.ExceptionsClass;
+import com.codebyashish.autoimageslider.Models.ImageSlidesModel;
 import com.squareup.picasso.Picasso;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+
 
 public class OutputFragment extends Fragment {
     FishDataManager fishDataManager = new FishDataManager();
@@ -62,50 +74,38 @@ public class OutputFragment extends Fragment {
 
 
             if(notFishImage) {
+                //Todo when image is not fish enough
                 hideButtonResults();
                 showDefaultImage();
                 bindData.setShowRetake(true);
             } else {
                 //button
-                bindData.btnResultOne.setEnabled(false);
-                //Image from the user
-                displayImage(bindData.imgInputFish, bindData.imgFishSpecies);
+
+
+                try {
+                    displayImage(bindData.imgInputFish, bindData.imgFishSpecies);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
                 displayFishInfo(topFishSpecies[0], topConfidences[0]);
                 bindData.setShowDescription(true);
             }
 
-
-
-
-            bindData.btnResultOne.setOnClickListener(view1 -> {
+            bindData.btnResultOne.setOnClickListener(view12 -> {
                 displayFishInfo(topFishSpecies[0], topConfidences[0]);
-                bindData.btnResultOne.setEnabled(false);
-
-                bindData.btnResultTwo.setEnabled(true);
-                bindData.btnResultThree.setEnabled(true);
 
             });
             bindData.btnResultTwo.setOnClickListener(view12 -> {
-               displayFishInfo(topFishSpecies[1], topConfidences[1]);
-                bindData.btnResultTwo.setEnabled(false);
+                displayFishInfo(topFishSpecies[1], topConfidences[1]);
 
-                bindData.btnResultOne.setEnabled(true);
-                bindData.btnResultThree.setEnabled(true);
             });
-            bindData.btnResultThree.setOnClickListener(view13 -> {
+            bindData.btnResultThree.setOnClickListener(view12 -> {
                 displayFishInfo(topFishSpecies[2], topConfidences[2]);
-                bindData.btnResultThree.setEnabled(false);
 
-                bindData.btnResultOne.setEnabled(true);
-                bindData.btnResultTwo.setEnabled(true);
             });
 
-            bindData.btnBack.setOnClickListener(view14 -> {
-//                CaptureFragment captureFragment = new CaptureFragment();
-//                FragmentManager manager = requireActivity().getSupportFragmentManager();
-//                FragmentTransaction transaction = manager.beginTransaction();
-//                transaction.replace(R.id.container, captureFragment);
-//                transaction.commit();
+            bindData.btnBack.setOnClickListener(view1 -> {
                 FragmentManager manager = requireActivity().getSupportFragmentManager();
                 manager.popBackStack();
 
@@ -113,7 +113,7 @@ public class OutputFragment extends Fragment {
 
             bindData.imgInputFish.setOnClickListener(view15 -> imagePopup.viewPopup());
 
-            bindData.btnSave.setOnClickListener(view16 -> {
+            bindData.btnSave.setOnClickListener(view1 -> {
                 CollectionsDbHelper dbHelper = new CollectionsDbHelper(getContext());
                 dbHelper.addFishData(imagePath, imageFileName, topFishSpecies, topConfidences);
 
@@ -137,7 +137,8 @@ public class OutputFragment extends Fragment {
         Bitmap image = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
 
         bindData.imgInputFish.setImageBitmap(image);
-        bindData.imgFishSpecies.setImageBitmap(image);
+        //Todo what to do with image slider if there is no fish found
+        //bindData.imgFishSpecies.setImageBitmap(image);
     }
 
     private void hideButtonResults() {
@@ -155,6 +156,20 @@ public class OutputFragment extends Fragment {
     private void displayFishInfo(String fishName, String confidence) {
         fishDataManager.getFishData(fishName, new FishDataManager.FishDataListener() {
             public void onFishDataLoaded(Fish fish) {
+                Picasso.get().load(fish.getMainImage()).fit().into(bindData.imgFishSpecies);
+                //More Images
+                ArrayList<ImageSlidesModel> resultsmodel = new ArrayList<>();
+                try {
+                    resultsmodel.add(new ImageSlidesModel(fish.getImg1(), ""));
+                    resultsmodel.add(new ImageSlidesModel(fish.getImg2(), ""));
+                    resultsmodel.add(new ImageSlidesModel(fish.getImg3(), ""));
+
+                } catch (ExceptionsClass e) {
+                    throw new RuntimeException(e);
+                }
+                bindData.description.resultSlider.setImageList(resultsmodel, ImageScaleType.CENTER_CROP);
+                //TODO: Change the ugly animation
+                bindData.description.resultSlider.setDefaultAnimation();
 
                 bindData.setConfidence(confidence + "%");
                 bindData.description.setEnglishName(fishName);
@@ -168,18 +183,19 @@ public class OutputFragment extends Fragment {
 
                 displayBioInfo(bindData, fish);
 
-                Picasso.get().load(fish.getMainImage()).into(bindData.imgFishSpecies);
-
-
                 //More Images
-                byte[] byteArray = args.getByteArray("imagebytes");
-                Drawable image = new BitmapDrawable(getResources(),BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length));
+                Uri photoURI = Uri.parse(args.getString("uri"));
+                Drawable image = null;
+                try {
+                    InputStream inputStream = getActivity().getContentResolver().openInputStream(photoURI);
+                    image = Drawable.createFromStream(inputStream, photoURI.toString() );
+                } catch (FileNotFoundException e) {
+                    image = getResources().getDrawable(R.drawable.wrong_image_4);
+                }
                 imagePopup.setWindowHeight(750); // Optional
                 imagePopup.setWindowWidth(900); // Optional
                 imagePopup.initiatePopup(image);
-                Picasso.get().load(fish.getImg1()).into(bindData.description.imgMImages1);
-                Picasso.get().load(fish.getImg2()).into(bindData.description.imgMImages2);
-                Picasso.get().load(fish.getImg3()).into(bindData.description.imgMImages3);
+
 
             }
             public void onFishDataNotFound() {
@@ -216,10 +232,12 @@ public class OutputFragment extends Fragment {
         });
     }
 
-    private void displayImage(ImageView imageView, ImageView refImage) {
+    private void displayImage(ImageView imageView, ImageView refImage) throws IOException {
+        Uri photoURI = Uri.parse(args.getString("uri"));
+        Bitmap image = MediaStore.Images.Media.getBitmap(requireContext().getContentResolver(), photoURI);
+
         byte[] byteArray = args.getByteArray("imagebytes");
-        if (byteArray != null) {
-            Bitmap image = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+        if (image != null) {
 
             // Calculate the scaling factors for width and height
             float scaleX = (float) 900 / image.getWidth();
@@ -240,6 +258,5 @@ public class OutputFragment extends Fragment {
             Drawable imgDrawable = new BitmapDrawable(resizedImage);
             bindData.imgInputFish.setImageDrawable(imgDrawable);
         }
-
     }
 }
