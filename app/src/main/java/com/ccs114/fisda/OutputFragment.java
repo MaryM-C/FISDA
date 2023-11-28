@@ -5,35 +5,28 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.databinding.DataBindingUtil;
+
 import com.ccs114.fisda.databinding.FragmentOutputBinding;
 import com.ceylonlabs.imageviewpopup.ImagePopup;
 import com.codebyashish.autoimageslider.Enums.ImageScaleType;
 import com.codebyashish.autoimageslider.ExceptionsClass;
 import com.codebyashish.autoimageslider.Models.ImageSlidesModel;
 import com.squareup.picasso.Picasso;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+
 import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
 
 
 public class OutputFragment extends Fragment {
@@ -41,10 +34,6 @@ public class OutputFragment extends Fragment {
     Bundle args;
     ImagePopup imagePopup;
     FragmentOutputBinding bindData;
-
-
-
-
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,16 +46,15 @@ public class OutputFragment extends Fragment {
         imagePopup.setHideCloseIcon(true);  // Optional
         imagePopup.setImageOnClickClose(true);  // Optional
 
-
-
         // Retrieve data from the arguments bundle
         if (args != null) {
             String imageFileName = args.getString("filename");
-            String imagePath = args.getString("imagepath");
+            String imagePath = args.getString("imagePath");
+            String imageUri = args.getString("uri");
             String[] topFishSpecies = args.getStringArray("topFishSpecies");
             String[] topConfidences = args.getStringArray("topConfidences");
-            Boolean savedImage = args.getBoolean("Saved");
-            Boolean notFishImage = args.getBoolean("isNotFish");
+            boolean savedImage = args.getBoolean("Saved");
+            boolean notFishImage = args.getBoolean("isNotFish");
 
             if(savedImage) {
                 bindData.btnSave.setVisibility(View.INVISIBLE);
@@ -79,31 +67,20 @@ public class OutputFragment extends Fragment {
                 showDefaultImage();
                 bindData.setShowRetake(true);
             } else {
-                //button
-
-
-                try {
-                    displayImage(bindData.imgInputFish, bindData.imgFishSpecies);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-
+                //initial
+                displayImage(bindData.imgInputFish);
                 displayFishInfo(topFishSpecies[0], topConfidences[0]);
                 bindData.setShowDescription(true);
             }
 
-            bindData.btnResultOne.setOnClickListener(view12 -> {
-                displayFishInfo(topFishSpecies[0], topConfidences[0]);
+            bindData.btnResultOne.setOnClickListener(view12 ->
+                    displayFishInfo(topFishSpecies[0], topConfidences[0]));
 
-            });
-            bindData.btnResultTwo.setOnClickListener(view12 -> {
-                displayFishInfo(topFishSpecies[1], topConfidences[1]);
+            bindData.btnResultTwo.setOnClickListener(view12 ->
+                    displayFishInfo(topFishSpecies[1], topConfidences[1]));
 
-            });
-            bindData.btnResultThree.setOnClickListener(view12 -> {
-                displayFishInfo(topFishSpecies[2], topConfidences[2]);
-
-            });
+            bindData.btnResultThree.setOnClickListener(view12 ->
+                    displayFishInfo(topFishSpecies[2], topConfidences[2]));
 
             bindData.btnBack.setOnClickListener(view1 -> {
                 FragmentManager manager = requireActivity().getSupportFragmentManager();
@@ -115,7 +92,8 @@ public class OutputFragment extends Fragment {
 
             bindData.btnSave.setOnClickListener(view1 -> {
                 CollectionsDbHelper dbHelper = new CollectionsDbHelper(getContext());
-                dbHelper.addFishData(imagePath, imageFileName, topFishSpecies, topConfidences);
+                dbHelper.addFishData(imagePath, imageUri, imageFileName, topFishSpecies, topConfidences);
+                dbHelper.close();
 
                 CaptureFragment captureFragment = new CaptureFragment();
                 FragmentManager manager = requireActivity().getSupportFragmentManager();
@@ -133,12 +111,11 @@ public class OutputFragment extends Fragment {
     }
 
     private void showDefaultImage() {
-        byte[] byteArray = args.getByteArray("imagebytes");
-        Bitmap image = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+        String imagePaths = args.getString("imagePath");
+        Bitmap image = BitmapFactory.decodeFile(imagePaths);
 
         bindData.imgInputFish.setImageBitmap(image);
-        //Todo what to do with image slider if there is no fish found
-        //bindData.imgFishSpecies.setImageBitmap(image);
+        bindData.imgFishSpecies.setImageBitmap(image);
     }
 
     private void hideButtonResults() {
@@ -183,19 +160,12 @@ public class OutputFragment extends Fragment {
 
                 displayBioInfo(bindData, fish);
 
-                //More Images
-                Uri photoURI = Uri.parse(args.getString("uri"));
-                Drawable image = null;
-                try {
-                    InputStream inputStream = getActivity().getContentResolver().openInputStream(photoURI);
-                    image = Drawable.createFromStream(inputStream, photoURI.toString() );
-                } catch (FileNotFoundException e) {
-                    image = getResources().getDrawable(R.drawable.wrong_image_4);
-                }
-                imagePopup.setWindowHeight(750); // Optional
-                imagePopup.setWindowWidth(900); // Optional
-                imagePopup.initiatePopup(image);
+                String imagepath= args.getString("imagePath");
+                Drawable image = new BitmapDrawable(imagepath);
 
+                imagePopup.setWindowHeight(750); // Optional
+                imagePopup.setWindowWidth(900);
+                imagePopup.initiatePopup(image);
 
             }
             public void onFishDataNotFound() {
@@ -232,31 +202,27 @@ public class OutputFragment extends Fragment {
         });
     }
 
-    private void displayImage(ImageView imageView, ImageView refImage) throws IOException {
-        Uri photoURI = Uri.parse(args.getString("uri"));
-        Bitmap image = MediaStore.Images.Media.getBitmap(requireContext().getContentResolver(), photoURI);
+    private void displayImage(ImageView imageView) {
+        String imagepath = args.getString("imagePath");
 
-        byte[] byteArray = args.getByteArray("imagebytes");
-        if (image != null) {
+        Bitmap image = BitmapFactory.decodeFile(imagepath);
 
-            // Calculate the scaling factors for width and height
-            float scaleX = (float) 900 / image.getWidth();
-            float scaleY = (float) 750 / image.getHeight();
+        float scaleX = (float) 900 / image.getWidth();
+        float scaleY = (float) 750 / image.getHeight();
 
-            float scale = Math.min(scaleX, scaleY);
+        float scale = Math.min(scaleX, scaleY);
 
-            // Create a matrix for the scaling transformation
-            Matrix matrix = new Matrix();
-            matrix.postScale(scale, scale);
+        // Create a matrix for the scaling transformation
+        Matrix matrix = new Matrix();
+        matrix.postScale(scale, scale);
 
-            // Create a new Bitmap with the desired dimensions
-            Bitmap resizedImage = Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, true);
+        // Create a new Bitmap with the desired dimensions
+        Bitmap resizedImage = Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, true);
 
-            imageView.setImageBitmap(resizedImage);
-//            imagePopup.setWindowHeight(resizedImage.getHeight()); // Optional
-//            imagePopup.setWindowWidth(resizedImage.getWidth()); // Optional
-            Drawable imgDrawable = new BitmapDrawable(resizedImage);
-            bindData.imgInputFish.setImageDrawable(imgDrawable);
-        }
+        imageView.setImageBitmap(resizedImage);
+
+        Drawable imgDrawable = new BitmapDrawable(resizedImage);
+        bindData.imgInputFish.setImageDrawable(imgDrawable);
+
     }
 }
