@@ -1,4 +1,4 @@
-package com.ccs114.fisda;
+package com.ccs114.fisda.adapters;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ccs114.fisda.fragments.OutputFragment;
+import com.ccs114.fisda.R;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
