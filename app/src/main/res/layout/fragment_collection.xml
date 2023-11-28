@@ -2,24 +2,20 @@
 <layout xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <data>
+                <import type="android.view.View"/>
+                <variable
+                    name="showCollections"
+                    type="Boolean" />
+                <variable
+                    name="showEmpty"
+                    type="Boolean" />
+        </data>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".fragments.CollectionFragment">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recCollection"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHeight_min="wrap"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
+            android:orientation="vertical">
 
                 <com.google.android.material.appbar.AppBarLayout
                     android:id="@+id/appBarLayout"
@@ -55,5 +51,16 @@
                         </androidx.appcompat.widget.Toolbar>
                 </com.google.android.material.appbar.AppBarLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <!--Empty Collection-->
+                <include
+                    android:id="@+id/empty"
+                    layout="@layout/empty_collections"
+                    android:visibility="@{showEmpty ? View.VISIBLE:View.GONE}" />
+
+                <!--Non Empty Collection-->
+                <include
+                    android:id="@+id/nonempty"
+                    layout="@layout/non_empty_collections"
+                    android:visibility="@{showCollections ? View.VISIBLE:View.GONE}" />
+        </LinearLayout>
 </layout>
