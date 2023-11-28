@@ -6,6 +6,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,6 +21,7 @@ import java.util.ArrayList;
 import androidx.databinding.DataBindingUtil;
 
 import com.ccs114.fisda.R;
+import com.ccs114.fisda.activities.MainActivity;
 import com.ccs114.fisda.adapters.CollectionsAdapter;
 import com.ccs114.fisda.database.CollectionsDbHelper;
 import com.ccs114.fisda.databinding.FragmentCollectionBinding;
@@ -27,6 +30,7 @@ public class CollectionFragment extends Fragment {
     private CollectionsDbHelper db;
     private ArrayList<String> id, filename, data_taken, imageUri, imagepath, first_name, second_name, third_name, first_conf, second_conf, third_conf;
     private CollectionsAdapter collectionsAdapter;
+    CaptureFragment captureFragment = new CaptureFragment();
     private FragmentCollectionBinding bindData;
 
     @Override
@@ -58,11 +62,18 @@ public class CollectionFragment extends Fragment {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         gridLayoutManager.setOrientation(RecyclerView.VERTICAL);
 
-        bindData.recCollection.setLayoutManager(gridLayoutManager);
-        bindData.recCollection.setAdapter(collectionsAdapter);
+        bindData.nonempty.recCollection.setLayoutManager(gridLayoutManager);
+        bindData.nonempty.recCollection.setAdapter(collectionsAdapter);
 
+        bindData.empty.btnCapture.setOnClickListener(view1 -> {
+            FragmentManager manager = requireActivity().getSupportFragmentManager();
+            FragmentTransaction transaction = manager.beginTransaction();
+            transaction.replace(R.id.container, captureFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
 
-
+            ((MainActivity) requireActivity()).setSelectedItem(R.id.capture);
+        });
 
         bindData.titleToolbar.setOnMenuItemClickListener(item -> {
             if(item.getItemId()==R.id.toolbar_search) {
@@ -131,14 +142,15 @@ public class CollectionFragment extends Fragment {
                 filteredFirstConf, filteredSecondConf, filteredThirdConf);
 
         // Set the filtered adapter to the RecyclerView
-        bindData.recCollection.setAdapter(filteredAdapter);
+        bindData.nonempty.recCollection.setAdapter(filteredAdapter);
     }
 
     private void storeDataInArrays() {
         Cursor cursor = db.readAllData();
         if(cursor.getCount() == 0) {
-            Toast.makeText(getContext(), "No Images Saved", Toast.LENGTH_SHORT).show();
+            bindData.setShowEmpty(true);
         } else {
+            bindData.setShowCollections(true);
             int size = 0;
             while (cursor.moveToNext()) {
                 id.add(cursor.getString(0));
