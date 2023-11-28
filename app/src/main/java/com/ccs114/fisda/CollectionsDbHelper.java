@@ -24,6 +24,8 @@ public class CollectionsDbHelper extends SQLiteOpenHelper {
     private static final String COLUMN_FILENAME = "filename";
     private static final String COLUMN_DATE_TAKEN = "date_taken";
     private static final String COLUMN_FILEPATH = "filepath";
+
+    private static final String COLUMN_IMAGEURI = "image_uri";
     private static final String COLUMN_1ST_NAME = "first_name";
     private static final String COLUMN_2ND_NAME = "second_name";
     private static final String COLUMN_3RD_NAME = "third_name";
@@ -42,6 +44,7 @@ public class CollectionsDbHelper extends SQLiteOpenHelper {
                 COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_FILENAME + " TEXT, " +
                 COLUMN_DATE_TAKEN + " DATE, " +
+                COLUMN_IMAGEURI + " TEXT, " +
                 COLUMN_FILEPATH + " TEXT, " +
                 COLUMN_1ST_NAME + " TEXT, " +
                 COLUMN_2ND_NAME + " TEXT, " +
@@ -59,11 +62,12 @@ public class CollectionsDbHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void addFishData(String currentPhotoPath, String imageFileName, String[] topFishSpecies, String[] topConfidences) {
+    public void addFishData(String currentPhotoPath, String imageUri, String imageFileName, String[] topFishSpecies, String[] topConfidences) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues content = new ContentValues();
         content.put(COLUMN_FILENAME, imageFileName);
         content.put(COLUMN_FILEPATH, currentPhotoPath);
+        content.put(COLUMN_IMAGEURI, imageUri);
         content.put(COLUMN_1ST_NAME, topFishSpecies[0]);
         content.put(COLUMN_2ND_NAME, topFishSpecies[1]);
         content.put(COLUMN_3RD_NAME, topFishSpecies[2]);
