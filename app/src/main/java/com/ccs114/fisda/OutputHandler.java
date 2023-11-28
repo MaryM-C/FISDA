@@ -116,6 +116,7 @@ public class OutputHandler {
 
         for (int i = 0; i < formattedConfidences.length; i++) {
             float confidenceValue = confidence[topIndices[i]] * 100;
+            confidenceValue = Math.max(0.01f, Math.min(99.99f, confidenceValue));
             formattedConfidences[i] = String.format(Locale.getDefault(), "%.2f", confidenceValue);
         }
 
