@@ -5,7 +5,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".CollectionFragment">
+            tools:context=".fragments.CollectionFragment">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recCollection"
