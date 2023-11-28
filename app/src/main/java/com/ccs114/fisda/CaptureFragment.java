@@ -27,6 +27,7 @@ import androidx.fragment.app.FragmentTransaction;
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -225,6 +226,7 @@ public class CaptureFragment extends Fragment {
 
             if(requestCode == REQUEST_PICK_IMAGE) {
                 photoURI = Objects.requireNonNull(data).getData();
+                handleImagePick(photoURI);
             }
 
             if(photoURI != null) {
@@ -241,6 +243,50 @@ public class CaptureFragment extends Fragment {
         }
 
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void handleImagePick(Uri dat) {
+        Bitmap image;
+
+        try {
+            image = MediaStore.Images.Media.getBitmap(requireContext().getContentResolver(), dat);
+            currentPhotoPath = saveImageToCameraDirectory(image);
+            imageFileName = getImageFileName(currentPhotoPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Function to get the filename from the file path
+    private String getImageFileName(String imagePath) {
+        if (imagePath != null) {
+            File imageFile = new File(imagePath);
+            return imageFile.getName();
+        }
+        return null;
+    }
+
+    // Save the image in the same directory as camera images and return the new path
+    private String saveImageToCameraDirectory(Bitmap image) throws IOException {
+        // Create a new file in the camera directory with the provided fileName
+        File imageFile = createImageFile();
+
+        try {
+            FileOutputStream fos = new FileOutputStream(imageFile);
+            image.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.flush();
+            fos.close();
+
+            // Notify the media scanner to scan the new image file
+            scanFile(imageFile);
+
+            // Return the path of the saved image
+            return imageFile.getAbsolutePath();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("SaveImage", "Failed to save image: " + e.getMessage());
+            return null;
+        }
     }
 
     private void handleActivityResultFailure(Intent data) {
@@ -262,9 +308,8 @@ public class CaptureFragment extends Fragment {
         String[] topConfidencesString = OutputHandler.getConfidencesAsFormattedString(handler.getConfidence(), topIndices);
 
         OutputFragment outputFragment = new OutputFragment();
-        outputFragment.setArguments(fishInputInfo(photoURI.toString(), topFishSpecies,
-                topConfidencesString, currentPhotoPath, imageFileName, handler));
-
+        outputFragment.setArguments(fishInputInfo(photoURI.toString(), topFishSpecies, topConfidencesString,
+                currentPhotoPath, imageFileName, handler));
 
         displayFishInfo(outputFragment);
     }
@@ -281,11 +326,10 @@ public class CaptureFragment extends Fragment {
     Bundle fishInputInfo(String photoURI, String[] topFishSpecies, String[] topConfidences,
                          String imagepath, String imageFileName, OutputHandler handler) {
         Bundle args = new Bundle();
-
+        args.putString("imagePath", imagepath);
         args.putString("uri", photoURI);
         args.putStringArray("topFishSpecies", topFishSpecies);
         args.putStringArray("topConfidences", topConfidences);
-        args.putString("imagepath", imagepath);
         args.putString("filename", imageFileName);
 
         if(handler.computeTopConfidence(handler.getConfidence()) < 0.60) {
