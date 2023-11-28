@@ -21,13 +21,14 @@ import java.util.List;
 //Data Binding
 import androidx.databinding.DataBindingUtil;
 import com.ccs114.fisda.databinding.FragmentCollectionBinding;
+import com.google.android.gms.common.data.DataHolder;
 
 public class CollectionFragment extends Fragment {
     CollectionsDbHelper db;
-    ArrayList<String> id, filename, data_taken, image_path, first_name, second_name, third_name, first_conf, second_conf, third_conf;
+    ArrayList<String> id, filename, data_taken, imageUri, imagepath, first_name, second_name, third_name, first_conf, second_conf, third_conf;
     CollectionsAdapter collectionsAdapter;
     FragmentCollectionBinding bindData;
-    private final List<MyItems> allItemsList = new ArrayList<>();
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -39,7 +40,8 @@ public class CollectionFragment extends Fragment {
         id = new ArrayList<>();
         filename = new ArrayList<>();
         data_taken = new ArrayList<>();
-        image_path = new ArrayList<>();
+        imageUri = new ArrayList<>();
+        imagepath = new ArrayList<>();
         first_name = new ArrayList<>();
         second_name = new ArrayList<>();
         third_name = new ArrayList<>();
@@ -49,7 +51,8 @@ public class CollectionFragment extends Fragment {
 
         storeDataInArrays();
 
-        collectionsAdapter = new CollectionsAdapter(getActivity(), id, filename, data_taken, image_path, first_name,
+        collectionsAdapter = new CollectionsAdapter(getActivity(),
+                id, filename, data_taken, imageUri, imagepath, first_name,
                 second_name, third_name, first_conf, second_conf, third_conf);
         collectionsAdapter.getItemCount();
 
@@ -58,6 +61,9 @@ public class CollectionFragment extends Fragment {
 
         bindData.recCollection.setLayoutManager(gridLayoutManager);
         bindData.recCollection.setAdapter(collectionsAdapter);
+
+
+
 
         bindData.titleToolbar.setOnMenuItemClickListener(item -> {
             if(item.getItemId()==R.id.toolbar_search) {
@@ -74,7 +80,7 @@ public class CollectionFragment extends Fragment {
 
                     @Override
                     public boolean onQueryTextChange(String newText) {
-                        // Perform filtering based on the search query and update the RecyclerView
+                        //implement here what to do with query
                         filterData(newText);
                         return true;
                     }
@@ -90,21 +96,43 @@ public class CollectionFragment extends Fragment {
     }
 
     private void filterData(String query) {
-        // Create a new list to store filtered items based on the search query
-        List<MyItems> filteredList = new ArrayList<>();
+        //implement search filter here
+        ArrayList<String> filteredId = new ArrayList<>();
+        ArrayList<String> filteredFilename = new ArrayList<>();
+        ArrayList<String> filteredDataTaken = new ArrayList<>();
+        ArrayList<String> filteredImageUri = new ArrayList<>();
+        ArrayList<String> filteredImagePath = new ArrayList<>();
+        ArrayList<String> filteredFirstName = new ArrayList<>();
+        ArrayList<String> filteredSecondName = new ArrayList<>();
+        ArrayList<String> filteredThirdName = new ArrayList<>();
+        ArrayList<String> filteredFirstConf = new ArrayList<>();
+        ArrayList<String> filteredSecondConf = new ArrayList<>();
+        ArrayList<String> filteredThirdConf = new ArrayList<>();
 
-
-        // Loop through all items in the allItemsList and check if they match the search query
-        for (MyItems item : allItemsList) {
-            if (item.getCommonName().toLowerCase().contains(query.toLowerCase())
-                    || item.getLocalName().toLowerCase().contains(query.toLowerCase())) {
-                // If the item matches the search query, add it to the filteredList
-                filteredList.add(item);
+        for (int i = 0; i < filename.size(); i++) {
+            if (first_name.get(i).toLowerCase().contains(query.toLowerCase())) {
+                // Add the matching data to the filtered lists
+                filteredId.add(id.get(i));
+                filteredFilename.add(filename.get(i));
+                filteredDataTaken.add(data_taken.get(i));
+                filteredImageUri.add(imageUri.get(i));
+                filteredImagePath.add(imagepath.get(i));
+                filteredFirstName.add(first_name.get(i));
+                filteredSecondName.add(second_name.get(i));
+                filteredThirdName.add(third_name.get(i));
+                filteredFirstConf.add(first_conf.get(i));
+                filteredSecondConf.add(second_conf.get(i));
+                filteredThirdConf.add(third_conf.get(i));
             }
         }
 
-        // Update the RecyclerView with the filtered data
-        bindData.recCollection.setAdapter(new MyAdapter(filteredList, getActivity()));
+        // Create a new adapter with the filtered data
+        CollectionsAdapter filteredAdapter = new CollectionsAdapter(getActivity(), filteredId, filteredFilename,
+                filteredDataTaken, filteredImageUri, filteredImagePath, filteredFirstName, filteredSecondName, filteredThirdName,
+                filteredFirstConf, filteredSecondConf, filteredThirdConf);
+
+        // Set the filtered adapter to the RecyclerView
+        bindData.recCollection.setAdapter(filteredAdapter);
     }
 
     private void storeDataInArrays() {
@@ -117,13 +145,14 @@ public class CollectionFragment extends Fragment {
                 id.add(cursor.getString(0));
                 filename.add(cursor.getString(1));
                 data_taken.add(cursor.getString(2));
-                image_path.add(cursor.getString(3));
-                first_name.add(cursor.getString(4));
-                second_name.add(cursor.getString(5));
-                third_name.add(cursor.getString(6));
-                first_conf.add(cursor.getString(7));
-                second_conf.add(cursor.getString(8));
-                third_conf.add(cursor.getString(9));
+                imageUri.add(cursor.getString(3));
+                imagepath.add(cursor.getString(4));
+                first_name.add(cursor.getString(5));
+                second_name.add(cursor.getString(6));
+                third_name.add(cursor.getString(7));
+                first_conf.add(cursor.getString(8));
+                second_conf.add(cursor.getString(9));
+                third_conf.add(cursor.getString(10));
                 size++;
             }
         }
