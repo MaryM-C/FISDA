@@ -14,8 +14,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/mainImage"
+                app:shapeAppearanceOverlay="@style/roundedcorner"
                 android:layout_width="match_parent"
                 android:layout_height="220dp"
                 android:contentDescription="TODO"

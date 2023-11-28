@@ -90,9 +90,11 @@
             android:id="@+id/txtCommonName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="10dp"
             android:text="@{commonName}"
             android:textSize="28sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="@tools:sample/cities" />
 
         <ScrollView
             android:id="@+id/scrlInfo"
@@ -251,6 +253,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="2dp"
                                 android:lines="2"
+                                android:paddingStart="5dp"
                                 android:text="@{environment}"
                                 android:textAlignment="viewStart"
                                 android:textSize="16sp"
@@ -261,6 +264,7 @@
                                 android:id="@+id/textView10"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:paddingStart="5dp"
                                 android:text="@string/environment"
                                 android:textAlignment="viewStart"
                                 android:textSize="16sp" />
@@ -293,6 +297,7 @@
                                 android:id="@+id/txtTemperature"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:paddingStart="5dp"
                                 android:text="@{temperature}"
                                 android:textAlignment="viewStart"
                                 android:textSize="16sp"
@@ -303,6 +308,7 @@
                                 android:id="@+id/textView8"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:paddingStart="5dp"
                                 android:text="@string/temperature"
                                 android:textAlignment="viewStart"
                                 android:textSize="16sp" />
@@ -402,7 +408,7 @@
                     android:layout_marginTop="10dp"
                     android:background="@drawable/rounded_corner"
                     android:orientation="vertical"
-                    android:padding="5dp">
+                    android:padding="10dp">
 
                     <TextView
                         android:layout_width="wrap_content"

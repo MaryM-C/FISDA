@@ -20,7 +20,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="10dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -28,7 +29,7 @@
 
             <!--Fish Species Image-->
 
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/imgFishSpecies"
                 android:layout_width="match_parent"
                 android:layout_height="220dp"
@@ -38,6 +39,7 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:shapeAppearanceOverlay="@style/roundedcorner"
                 tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -158,17 +160,17 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-       <!--Fish Information-->
+        <!--Fish Information-->
         <include
             android:id="@+id/description"
             layout="@layout/description_layout"
-            android:visibility="@{showDescription ? View.VISIBLE:View.GONE}"/>
+            android:visibility="@{showDescription ? View.VISIBLE:View.GONE}" />
 
         <!--Retake Instruction-->
         <include
             android:id="@+id/retake"
             layout="@layout/retake_layout"
-            android:visibility="@{showRetake ? View.VISIBLE:View.GONE}"/>
+            android:visibility="@{showRetake ? View.VISIBLE:View.GONE}" />
 
     </LinearLayout>
 </layout>
