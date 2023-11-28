@@ -47,13 +47,12 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
             }
+
+
         });
+
     }
-
-
-
-
-
-
-
+    public void setSelectedItem(int itemId) {
+        bottomNavigationView.setSelectedItemId(itemId);
+    }
 }
