@@ -5,6 +5,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import androidx.test.espresso.Espresso;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
+
+import com.ccs114.fisda.activities.MainActivity;
+
 import org.junit.Rule;
 import org.junit.Test;
 

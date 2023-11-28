@@ -6,6 +6,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.rule.ActivityTestRule;
+
+import com.ccs114.fisda.activities.MainActivity;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
