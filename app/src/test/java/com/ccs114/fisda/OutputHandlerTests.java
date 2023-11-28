@@ -51,9 +51,9 @@ public class OutputHandlerTests {
     static Stream<Arguments> testDataForGetConfidencesAsFormattedString() {
         return Stream.of(
                 Arguments.of(
-                        new float[] {0.1f, 0.2f, 0.3f}, // confidences
+                        new float[] {0.001f, 0.2f, 0.3f}, // confidences
                         new int[] {2,1,0}, //indices
-                        new String[] {"30.00", "20.00", "10.00"}), //Formatted Strings
+                        new String[] {"30.00", "20.00", "00.01"}), //Formatted Strings
                 Arguments.of(
                         new float[] {0.99f, 0.21f, 0.32f},
                         new int[] {0,2,1},
@@ -79,7 +79,7 @@ public class OutputHandlerTests {
     @ParameterizedTest
     @MethodSource("testDataForComputeTopIndices")
     public void computeTopIndices_shouldReturnTheIndicesOfTheHighestConfidences(float[] inputArray, int[] expectedValues) {
-        int[] actualValues = handler.computeTopIndices(inputArray);
+        int[] actualValues = OutputHandler.computeTopIndices(inputArray);
 
         assertThat(actualValues).isNotEmpty();
         assertThat(actualValues.length).isEqualTo(expectedValues.length);
@@ -89,7 +89,7 @@ public class OutputHandlerTests {
     @ParameterizedTest
     @MethodSource("testDataForGetTopFishSpeciesName")
     public void getTopFishSpeciesName_shouldReturnTheFishNamesBasedOnTheArray(int[] topIndices, String[] expectedFishNames) {
-        String[] actualFishNames = handler.getTopFishSpeciesName(topIndices);
+        String[] actualFishNames = OutputHandler.getTopFishSpeciesName(topIndices);
 
         assertThat(actualFishNames).isNotEmpty();
         assertThat(actualFishNames.length).isEqualTo(expectedFishNames.length);
@@ -100,7 +100,7 @@ public class OutputHandlerTests {
     @MethodSource("testDataForGetConfidencesAsFormattedString")
     public void getConfidencesAsFormattedString_shouldReturnIndicatedFormatForConfidences(float[] confidences, int[] indices,
             String[] expectedStrings) {
-        String[] actualStrings = handler.getConfidencesAsFormattedString(confidences, indices);
+        String[] actualStrings = OutputHandler.getConfidencesAsFormattedString(confidences, indices);
 
         assertThat(actualStrings).isNotEmpty();
         assertThat(actualStrings.length).isEqualTo(expectedStrings.length);
