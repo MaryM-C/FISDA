@@ -38,9 +38,16 @@
     <string name="btnResulTwo">2</string>
     <string name="btnResultThree">3</string>
     <string name="btn_save">Save Image</string>
-    <string name="retake">Fish not found.\nPlease try again.</string>
+    <string name="noFish">Please try another photo</string>
+    <string name="retake">Refer to earlier tips to improve photo quality and try again</string>
+
 
     <!--Menu Action Bar-->
     <string name="search">Search</string>
+    <string name="your_collections_is_empty">Your collections is empty</string>
+    <string name="empty_box">Empty Box</string>
+    <string name="looks_like_you_haven_t_saved_any_photos_yet">Looks like you haven\'t saved any photos yet</string>
+    <string name="capture_an_image">Capture an image</string>
+    <string name="use_your_camera_or_select_a_photo_from_the_gallery_to_get_started">Use your camera or select a photo from the gallery to get started</string>
 
 </resources>
