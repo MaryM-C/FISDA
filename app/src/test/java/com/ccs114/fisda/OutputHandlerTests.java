@@ -1,6 +1,9 @@
 package com.ccs114.fisda;
 
 import static com.google.common.truth.Truth.assertThat;
+
+import com.ccs114.fisda.utils.OutputHandler;
+
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;

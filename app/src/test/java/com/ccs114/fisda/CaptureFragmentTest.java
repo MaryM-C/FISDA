@@ -7,6 +7,10 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 import android.os.Bundle;
+
+import com.ccs114.fisda.fragments.CaptureFragment;
+import com.ccs114.fisda.utils.OutputHandler;
+
 import java.util.stream.Stream;
 
 @RunWith(MockitoJUnitRunner.class)
