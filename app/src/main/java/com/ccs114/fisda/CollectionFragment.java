@@ -5,18 +5,15 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import java.util.ArrayList;
-import java.util.List;
 
 //Data Binding
 import androidx.databinding.DataBindingUtil;
@@ -24,11 +21,10 @@ import com.ccs114.fisda.databinding.FragmentCollectionBinding;
 import com.google.android.gms.common.data.DataHolder;
 
 public class CollectionFragment extends Fragment {
-    CollectionsDbHelper db;
-    ArrayList<String> id, filename, data_taken, imageUri, imagepath, first_name, second_name, third_name, first_conf, second_conf, third_conf;
-    CollectionsAdapter collectionsAdapter;
-    FragmentCollectionBinding bindData;
-
+    private CollectionsDbHelper db;
+    private ArrayList<String> id, filename, data_taken, imageUri, imagepath, first_name, second_name, third_name, first_conf, second_conf, third_conf;
+    private CollectionsAdapter collectionsAdapter;
+    private FragmentCollectionBinding bindData;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,7 +47,7 @@ public class CollectionFragment extends Fragment {
 
         storeDataInArrays();
 
-        collectionsAdapter = new CollectionsAdapter(getActivity(),
+        collectionsAdapter = new CollectionsAdapter(
                 id, filename, data_taken, imageUri, imagepath, first_name,
                 second_name, third_name, first_conf, second_conf, third_conf);
         collectionsAdapter.getItemCount();
@@ -127,7 +123,7 @@ public class CollectionFragment extends Fragment {
         }
 
         // Create a new adapter with the filtered data
-        CollectionsAdapter filteredAdapter = new CollectionsAdapter(getActivity(), filteredId, filteredFilename,
+        CollectionsAdapter filteredAdapter = new CollectionsAdapter(filteredId, filteredFilename,
                 filteredDataTaken, filteredImageUri, filteredImagePath, filteredFirstName, filteredSecondName, filteredThirdName,
                 filteredFirstConf, filteredSecondConf, filteredThirdConf);
 
