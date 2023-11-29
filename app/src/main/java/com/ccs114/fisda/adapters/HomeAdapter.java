@@ -12,20 +12,20 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ccs114.fisda.fragments.InformationFragment;
-import com.ccs114.fisda.models.MyItems;
+import com.ccs114.fisda.models.HomeItems;
 import com.ccs114.fisda.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
+public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> {
 
 
-    private final List<MyItems> items; //item in array  list
+    private final List<HomeItems> items; //item in array  list
     private final Context context; //context
 
     //constructor
-    public MyAdapter(List<MyItems> items, Context context) {
+    public HomeAdapter(List<HomeItems> items, Context context) {
         this.items = items;
         this.context = context;
 
@@ -35,14 +35,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     @NonNull
     @Override
-    public MyAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public HomeAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new MyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_layout, null));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull HomeAdapter.MyViewHolder holder, int position) {
         //getting single item/ fish details from list
-        MyItems myItems = items.get(position);
+        HomeItems myItems = items.get(position);
         String image =items.get(position).getImage();
 
         //setting user details to textviews
