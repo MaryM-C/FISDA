@@ -1,24 +1,21 @@
 package com.ccs114.fisda.activities;
 
 
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.os.Bundle;
-import android.view.MenuItem;
-
-import androidx.annotation.NonNull;
-
-
 import com.ccs114.fisda.R;
+import com.ccs114.fisda.databinding.ActivityMainBinding;
 import com.ccs114.fisda.fragments.CaptureFragment;
 import com.ccs114.fisda.fragments.CollectionFragment;
 import com.ccs114.fisda.fragments.HomeFragment;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 
-
+/**
+ * The main activity of the FiSDA application, responsible for managing the UI and navigation.
+ */
 public class MainActivity extends AppCompatActivity {
-    BottomNavigationView bottomNavigationView;
+    ActivityMainBinding binding;
     HomeFragment homeFragment = new HomeFragment();
     CaptureFragment captureFragment = new CaptureFragment();
     CollectionFragment collectionsFragment = new CollectionFragment();
@@ -27,32 +24,27 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        bottomNavigationView  = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.capture);
+        binding.bottomNavigation.setSelectedItemId(R.id.capture);
         getSupportFragmentManager().beginTransaction().replace(R.id.container,captureFragment).commit();
 
+        binding.bottomNavigation.setOnItemSelectedListener(item -> {
 
-        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int id = item.getItemId();
-                if(id == R.id.home){
-                    getSupportFragmentManager().beginTransaction().replace(R.id.container,homeFragment).commit();
-                    return true;
-                } else if (id == R.id.capture) {
-                    getSupportFragmentManager().beginTransaction().replace(R.id.container,captureFragment).commit();
-                    return true;
-                }else{
-                    getSupportFragmentManager().beginTransaction().replace(R.id.container,collectionsFragment).commit();
-                    return true;
-                }
+            if(item.getItemId() == R.id.home){
+                getSupportFragmentManager().beginTransaction().replace(R.id.container,homeFragment).commit();
+                return true;
+
+            } else if (item.getItemId() == R.id.capture) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.container,captureFragment).commit();
+                return true;
+
+            }else{
+                getSupportFragmentManager().beginTransaction().replace(R.id.container,collectionsFragment).commit();
+                return true;
             }
-
-
         });
 
     }
     public void setSelectedItem(int itemId) {
-        bottomNavigationView.setSelectedItemId(itemId);
+        binding.bottomNavigation.setSelectedItemId(itemId);
     }
 }
