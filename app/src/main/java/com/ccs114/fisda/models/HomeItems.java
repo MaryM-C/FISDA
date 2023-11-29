@@ -1,13 +1,11 @@
 package com.ccs114.fisda.models;
 
-import android.widget.ImageView;
-
-public class MyItems {
+public class HomeItems {
 
     private final String CommonName, LocalName, Category, Image;
 
 
-    public MyItems(String commonName, String localName, String category, String image) {
+    public HomeItems(String commonName, String localName, String category, String image) {
         CommonName = commonName;
         LocalName = localName;
         Category = category;
