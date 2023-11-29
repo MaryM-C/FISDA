@@ -12,19 +12,19 @@ import androidx.annotation.Nullable;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-
+/**
+ * Helper class for managing the SQLite database used in the FiSDA application.
+ */
 public class CollectionsDbHelper extends SQLiteOpenHelper {
 
-    private Context context;
+    private final Context context;
     private static final String DB_NAME = "DbFisda.db";
     private static final int DB_VERSION = 1;
     private static final String TABLE_NAME = "tbl_collections";
-
     private static final String COLUMN_ID = "_id";
     private static final String COLUMN_FILENAME = "filename";
     private static final String COLUMN_DATE_TAKEN = "date_taken";
     private static final String COLUMN_FILEPATH = "filepath";
-
     private static final String COLUMN_IMAGEURI = "image_uri";
     private static final String COLUMN_1ST_NAME = "first_name";
     private static final String COLUMN_2ND_NAME = "second_name";
