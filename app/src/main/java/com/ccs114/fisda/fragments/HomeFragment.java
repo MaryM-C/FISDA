@@ -16,8 +16,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ccs114.fisda.R;
-import com.ccs114.fisda.adapters.MyAdapter;
-import com.ccs114.fisda.models.MyItems;
+import com.ccs114.fisda.adapters.HomeAdapter;
+import com.ccs114.fisda.models.HomeItems;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -40,9 +40,9 @@ public class HomeFragment extends Fragment {
 
 
     //creating list for MyItems to store fish details
-    private final List<MyItems> myItemsList = new ArrayList<>();
+    private final List<HomeItems> myItemsList = new ArrayList<>();
 
-    private final List<MyItems> allItemsList = new ArrayList<>();
+    private final List<HomeItems> allItemsList = new ArrayList<>();
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -106,11 +106,11 @@ public class HomeFragment extends Fragment {
 
     private void filterData(String query) {
         // Create a new list to store filtered items based on the search query
-        List<MyItems> filteredList = new ArrayList<>();
+        List<HomeItems> filteredList = new ArrayList<>();
 
 
         // Loop through all items in the allItemsList and check if they match the search query
-        for (MyItems item : allItemsList) {
+        for (HomeItems item : allItemsList) {
             if (item.getCommonName().toLowerCase().contains(query.toLowerCase())
                     || item.getLocalName().toLowerCase().contains(query.toLowerCase())
                     || item.getCategory().toLowerCase().contains(query.toLowerCase())) {
@@ -120,7 +120,7 @@ public class HomeFragment extends Fragment {
         }
 
         // Update the RecyclerView with the filtered data
-        bindData.collectionRecyclerView.setAdapter(new MyAdapter(filteredList, getActivity()));
+        bindData.collectionRecyclerView.setAdapter(new HomeAdapter(filteredList, getActivity()));
 
     }
 
@@ -144,7 +144,7 @@ public class HomeFragment extends Fragment {
 
 
                         // Creating MyItems object with all attributes
-                        MyItems myItems = new MyItems(getCommonName, getLocalName, getCategory, getImage);
+                        HomeItems myItems = new HomeItems(getCommonName, getLocalName, getCategory, getImage);
 
                         //adding this to the list
                         myItemsList.add(myItems);
@@ -152,7 +152,7 @@ public class HomeFragment extends Fragment {
 
                     }
                 }
-                bindData.collectionRecyclerView.setAdapter(new MyAdapter(myItemsList, getActivity()));
+                bindData.collectionRecyclerView.setAdapter(new HomeAdapter(myItemsList, getActivity()));
 
             }
 
