@@ -326,8 +326,8 @@ public class CaptureFragment extends Fragment {
      * @return A Bundle containing the image byte array, top fish species names, and confidence scores.
      */
     @NonNull
-    private Bundle fishInputInfo(String photoURI, String[] topFishSpecies, String[] topConfidences,
-                         String imagepath, String imageFileName, OutputHandler handler) {
+    public Bundle fishInputInfo(String photoURI, String[] topFishSpecies, String[] topConfidences,
+                                String imagepath, String imageFileName, OutputHandler handler) {
         Bundle args = new Bundle();
         args.putString("imagePath", imagepath);
         args.putString("uri", photoURI);
