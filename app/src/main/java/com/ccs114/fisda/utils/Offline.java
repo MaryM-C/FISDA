@@ -1,4 +1,4 @@
-package com.ccs114.fisda.models;
+package com.ccs114.fisda.utils;
 
 import android.app.Application;
 
