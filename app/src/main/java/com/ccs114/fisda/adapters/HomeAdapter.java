@@ -31,8 +31,6 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> 
 
     }
 
-
-
     @NonNull
     @Override
     public HomeAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -51,27 +49,18 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> 
         holder.category.setText(myItems.getCategory());
 
 
+        //load the image using picaso from the web
+        Picasso.get().load(image).into(holder.image);
 
-        try{
-            //load the image using picaso from the web
-            Picasso.get().load(image).into(holder.image);
-        }
-        catch (Exception e){
 
-        }
+        holder.image.setOnClickListener(view -> {
+            Intent intent = new Intent(context,  InformationFragment.class);
 
-        holder.image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public  void onClick(View view) {
-                Intent intent = new Intent(context,  InformationFragment.class);
+            String commonName = myItems.getCommonName();
+            intent.putExtra("commonname", commonName);
 
-                String commonName = myItems.getCommonName();
-                intent.putExtra("commonname", commonName);
-
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
-            }
-
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
         });
 
 
