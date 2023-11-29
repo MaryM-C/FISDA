@@ -23,7 +23,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="10dp">
 
                 <TextView
                     android:id="@+id/txtFishName"
@@ -33,7 +34,8 @@
                     android:gravity="center"
                     android:text="Snap Tips"
                     android:textColor="#000000"
-                    android:textSize="30sp" />
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
 
                 <ImageView
                     android:id="@+id/imgFish"
@@ -46,7 +48,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-light"
+                    android:fontFamily="sans-serif-medium"
                     android:gravity="center"
                     android:padding="2dp"
                     android:text="The following can lead to poor results"
@@ -60,7 +62,7 @@
                     android:columnCount="2"
                     android:columnOrderPreserved="false"
                     android:rowCount="4"
-                    android:useDefaultMargins="true">
+                    android:useDefaultMargins="false">
 
 
                     <ImageView
@@ -72,17 +74,18 @@
                         android:layout_column="0"
                         android:layout_columnWeight="1"
                         android:layout_gravity="center"
-                        android:layout_marginLeft="10dp"
+                        android:cropToPadding="false"
                         android:src="@drawable/wrong_image_1"
                         app:srcCompat="@drawable/wrong_image_1" />
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:layout_row="1"
                         android:layout_column="0"
                         android:layout_gravity="center"
-                        android:fontFamily="sans-serif-light"
+                        android:layout_marginBottom="10dp"
+                        android:fontFamily="sans-serif-medium"
                         android:text="Blurry"
                         android:textColor="#000000" />
 
@@ -97,12 +100,13 @@
                         app:srcCompat="@drawable/wrong_image_2" />
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:layout_row="1"
                         android:layout_column="1"
                         android:layout_gravity="center"
-                        android:fontFamily="sans-serif-light"
+                        android:layout_marginBottom="10dp"
+                        android:fontFamily="sans-serif-medium"
                         android:text="Multiple species"
                         android:textColor="#000000" />
 
@@ -122,7 +126,7 @@
                         android:layout_row="3"
                         android:layout_column="0"
                         android:layout_gravity="center"
-                        android:fontFamily="sans-serif-light"
+                        android:fontFamily="sans-serif-medium"
                         android:text="Deteriorated"
                         android:textAllCaps="false"
                         android:textColor="#000000" />
@@ -142,7 +146,7 @@
                         android:layout_row="3"
                         android:layout_column="1"
                         android:layout_gravity="center"
-                        android:fontFamily="sans-serif-light"
+                        android:fontFamily="sans-serif-medium"
                         android:text="Bad angle"
                         android:textColor="#000000" />
 
