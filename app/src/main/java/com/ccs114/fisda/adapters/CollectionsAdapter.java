@@ -1,11 +1,13 @@
 package com.ccs114.fisda.adapters;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,10 +21,18 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-
 public class CollectionsAdapter extends RecyclerView.Adapter<CollectionsAdapter.CollectionsHolder>{
 
     private final ArrayList id, filename, date_taken, imageUri, imagepath, first_name, second_name, third_name, first_conf, second_conf, third_conf;
+    private OnItemClickListener clickListener;
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        clickListener = listener;
+    }
 
     public CollectionsAdapter(ArrayList<String> id,
                               ArrayList<String> filename, ArrayList<String> date_taken,
@@ -47,7 +57,11 @@ public class CollectionsAdapter extends RecyclerView.Adapter<CollectionsAdapter.
     @NonNull
     @Override
     public CollectionsAdapter.CollectionsHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new CollectionsHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_collections, null));
+        Context context = parent.getContext();
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View view = inflater.inflate(R.layout.recycler_collections, null);
+
+        return new CollectionsHolder(view, clickListener);
     }
 
     @Override
@@ -81,7 +95,7 @@ public class CollectionsAdapter extends RecyclerView.Adapter<CollectionsAdapter.
 
         holder.imageView.setOnClickListener(view -> {
             String imageURI1 = String.valueOf(imageUri.get(holder.getAdapterPosition()));
-            String imagePath= String.valueOf(imagepath.get(holder.getAdapterPosition()));
+            String imagePath = String.valueOf(imagepath.get(holder.getAdapterPosition()));
 
             String[] topFishSpecies = new String[3];
             topFishSpecies[0] = String.valueOf(first_name.get(holder.getAdapterPosition()));
@@ -109,8 +123,21 @@ public class CollectionsAdapter extends RecyclerView.Adapter<CollectionsAdapter.
                     .addToBackStack("OutputFragment")
                     .commit();
         });
+        holder.btnDel.setOnClickListener(view -> {
+            Log.d("DELETEButton", "Listener");
+            if(clickListener != null) {
+                int pos = holder.getAdapterPosition();
+                Log.d("DELETEbutton", " POS: " + pos);
+
+                if (pos != RecyclerView.NO_POSITION) {
+                    clickListener.onItemClick(pos);
+                }
+
+            }
+        });
 
     }
+
 
     private void logBundleContents(Bundle args) {
         for (String key : args.keySet()) {
@@ -129,13 +156,31 @@ public class CollectionsAdapter extends RecyclerView.Adapter<CollectionsAdapter.
 
         TextView first_name, dateTaken;
         ImageView imageView;
+        ImageButton btnDel;
 
-        public CollectionsHolder(@NonNull View itemView) {
+        public CollectionsHolder(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
 
             first_name = itemView.findViewById(R.id.fileName);
             dateTaken = itemView.findViewById(R.id.dateTaken);
             imageView = itemView.findViewById(R.id.collectionImage);
+            btnDel = itemView.findViewById(R.id.btnDelete);
+
+            btnDel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onItemClick(getAdapterPosition());
+                }
+            });
+
+
+
+
+
+
+
+
+
 
         }
     }
