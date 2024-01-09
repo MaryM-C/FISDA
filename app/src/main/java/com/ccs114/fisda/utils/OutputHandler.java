@@ -18,7 +18,7 @@ public class OutputHandler {
             "Climbing Perch",
             "Freshwater Eel",
             "Goby",
-            "Gold Fish",
+            "Goldfish",
             "Gourami",
             "Indian Carp",
             "Indo-Pacific Tarpon",
