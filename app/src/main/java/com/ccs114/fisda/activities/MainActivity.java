@@ -4,6 +4,7 @@ package com.ccs114.fisda.activities;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 
 import com.ccs114.fisda.R;
 import com.ccs114.fisda.databinding.ActivityMainBinding;
@@ -22,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         binding.bottomNavigation.setSelectedItemId(R.id.capture);
         getSupportFragmentManager().beginTransaction().replace(R.id.container,captureFragment).commit();
