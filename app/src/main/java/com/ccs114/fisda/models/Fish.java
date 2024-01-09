@@ -1,108 +1,131 @@
 package com.ccs114.fisda.models;
 
 public class Fish {
-    private String Category;
-    private String TClass;
-    private String CommonName;
-    private String Diet;
-    private String Edibility;
-    private String EnglishName;
-    private String Environment;
-    private String Family;
-    private String Genus;   
-    private String mainImage;
-    private String Image;
+    private String commonName;
+    private String englishName;
+    private String localName;
+
+    private String horizontalImg;
+    private String verticalImg;
     private String img1;
     private String img2;
     private String img3;
-    private String LocalName;
-    private String MaxLength;
-    private String MaxWeight;
-    private String Order;
-    private String ScientificName;
-    private String ShortDescription;
-    private String Size;
-    private String Temperature;
-    private String FishID;
+    private String optLength;
+    private String optWeight;
+    private String maxLength;
+    private String maxWeight;
+    private String tClass;
+    private String genus;
+    private String family;
+    private String order;
+    private String sciName;
+    private String category;
+    private String diet;
+    private String edibility;
+    private String environment;
+    private String shortDescription;
+    private String temperature;
+    private String fishStatus;
 
-
-     public Fish() {
+    public Fish() {
         // Default constructor required for Firebase
     }
-    public String getCategory() {
-        return Category;
-    }
-    public String getTClass() {
-        return TClass;
-    }
+
     public String getCommonName() {
-        return CommonName;
+        return commonName;
     }
-    public String getDiet() {
-        return Diet;
-    }
-    public String getEdibility() {
-        return Edibility;
-    }
+
     public String getEnglishName() {
-        return EnglishName;
+        return englishName;
     }
-    public String getEnvironment() {
-        return Environment;
+
+    public String getLocalName() {
+        return localName;
     }
-    public String getFamily() {
-        return Family;
+
+
+    public String getHorizontalImg() {
+        return horizontalImg;
     }
-    public String getGenus() {
-        return Genus;
-    }
-    public String getMainImage() {
-        return mainImage;
-    }
-    public String getImage() {
-        return Image;
+
+    public String getVerticalImg() {
+        return verticalImg;
     }
     public String getImg1() {
         return img1;
     }
+
     public String getImg2() {
         return img2;
     }
+
     public String getImg3() {
         return img3;
     }
-    public String getLocalName() {
-        return LocalName;
+
+    public String getOptLength() {
+        return optLength;
     }
+
+    public String getOptWeight() {
+        return optWeight;
+    }
+
     public String getMaxLength() {
-        return MaxLength;
+        return maxLength;
     }
+
     public String getMaxWeight() {
-        return MaxWeight;
+        return maxWeight;
     }
+
+    public String gettClass() {
+        return tClass;
+    }
+
+    public String getGenus() {
+        return genus;
+    }
+
+    public String getFamily() {
+        return family;
+    }
+
     public String getOrder() {
-        return Order;
+        return order;
     }
-    public String getScientificName() {
-        return ScientificName;
+
+    public String getSciName() {
+        return sciName;
     }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public String getDiet() {
+        return diet;
+    }
+
+    public String getEdibility() {
+        return edibility;
+    }
+
+    public String getEnvironment() {
+        return environment;
+    }
+
     public String getShortDescription() {
-        return ShortDescription;
+        return shortDescription;
     }
-    public String getSize() {
-        return Size;
-    }
+
     public String getTemperature() {
-        return Temperature;
-    }
-    public String getFishID() {
-        return FishID;
+        return temperature;
     }
 
-
-
-
-
+    public String getFishStatus() {
+        return fishStatus;
+    }
 
 
 }
