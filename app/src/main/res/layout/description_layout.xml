@@ -28,6 +28,10 @@
         <variable
             name="category"
             type="String" />
+
+        <variable
+            name="status"
+            type="String" />
         <!--Taxonomy-->
         <variable
             name="varClass"
@@ -64,7 +68,10 @@
             type="String" />
 
         <variable
-            name="size"
+            name="optLength"
+            type="String" />
+        <variable
+            name="optWeight"
             type="String" />
 
         <variable
@@ -86,13 +93,14 @@
         android:orientation="vertical"
         android:theme="@style/descriptionText">
 
+
         <TextView
             android:id="@+id/txtCommonName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:text="@{commonName}"
-            android:textSize="28sp"
+            android:textSize="24sp"
             android:textStyle="bold"
             tools:text="@tools:sample/cities" />
 
@@ -105,8 +113,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="10dp">
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -212,6 +219,66 @@
                     </TableRow>
                 </TableLayout>
 
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/rounded_corner"
+                    android:padding="5dp">
+
+                    <ImageView
+                        android:id="@+id/imageView9"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="3dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginEnd="3dp"
+                        android:layout_marginBottom="3dp"
+                        android:contentDescription="@string/iucn_red_list_status"
+                        app:srcCompat="@drawable/fish" />
+
+                    <ImageButton
+                        android:id="@+id/btnMoreInfo"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="6dp"
+                        android:layout_toEndOf="@id/textView15"
+                        android:backgroundTint="@color/frostee"
+                        android:contentDescription="@string/more_info"
+                        app:srcCompat="@drawable/help" />
+
+                    <TextView
+                        android:id="@+id/txtStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_toEndOf="@id/imageView9"
+                        android:gravity="center_vertical"
+                        android:lines="2"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="0dp"
+                        android:text="@{status}"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        tools:text="@tools:sample/full_names" />
+
+                    <TextView
+                        android:id="@+id/textView15"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginTop="40dp"
+                        android:layout_toEndOf="@id/imageView9"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="0dp"
+                        android:text="@string/iucn_red_list_status"
+                        android:textAlignment="viewStart"
+                        android:textSize="16sp" />
+                </RelativeLayout>
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -221,9 +288,11 @@
                     android:textStyle="bold"
                     app:drawableStartCompat="@drawable/biology" />
 
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:baselineAligned="false"
                     android:orientation="horizontal"
                     android:weightSum="2">
 
@@ -240,6 +309,7 @@
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:layout_gravity="center"
+                            android:contentDescription="@string/environment"
                             app:srcCompat="@drawable/habitat" />
 
                         <LinearLayout
@@ -254,6 +324,7 @@
                                 android:layout_marginBottom="2dp"
                                 android:lines="2"
                                 android:paddingStart="5dp"
+                                android:paddingEnd="0dp"
                                 android:text="@{environment}"
                                 android:textAlignment="viewStart"
                                 android:textSize="16sp"
@@ -265,9 +336,11 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:paddingStart="5dp"
+                                android:paddingEnd="0dp"
                                 android:text="@string/environment"
                                 android:textAlignment="viewStart"
                                 android:textSize="16sp" />
+
                         </LinearLayout>
 
                     </LinearLayout>
@@ -285,21 +358,25 @@
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:layout_gravity="center"
+                            android:contentDescription="@string/temperature"
                             app:srcCompat="@drawable/temp" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_gravity="center"
                             android:orientation="vertical">
 
                             <TextView
                                 android:id="@+id/txtTemperature"
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:minLines="2"
                                 android:paddingStart="5dp"
+                                android:paddingEnd="0dp"
                                 android:text="@{temperature}"
-                                android:textAlignment="viewStart"
+                                android:textAlignment="textStart"
                                 android:textSize="16sp"
                                 android:textStyle="bold"
                                 tools:text="@tools:sample/us_phones" />
@@ -309,8 +386,9 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:paddingStart="5dp"
+                                android:paddingEnd="0dp"
                                 android:text="@string/temperature"
-                                android:textAlignment="viewStart"
+                                android:textAlignment="gravity"
                                 android:textSize="16sp" />
 
                         </LinearLayout>
@@ -319,10 +397,116 @@
 
                 </LinearLayout>
 
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/rounded_corner">
+
+                    <TextView
+                        android:id="@+id/textView12"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:gravity="center_vertical"
+                        android:lines="2"
+                        android:text="@string/optimal_size"
+                        android:textSize="16sp" />
+
+                    <ImageButton
+                        android:id="@+id/btnMoreInfo2"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_toEndOf="@id/textView12"
+                        android:backgroundTint="@color/frostee"
+                        android:contentDescription="@string/more_info"
+                        app:srcCompat="@drawable/help2" />
+                </RelativeLayout>
+
                 <TableLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="10dp"
+                    android:background="@drawable/rounded_corner"
+                    android:padding="5dp">
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="5dp">
+
+                        <TextView
+                            android:id="@+id/textView90"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="5dp"
+                            android:text="@string/weight"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/txtOptWeight"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:text="@{optWeight}"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            tools:text="@tools:sample/us_zipcodes" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="5dp">
+
+                        <TextView
+                            android:id="@+id/textView89"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="5dp"
+                            android:text="@string/length"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/txtOptLength"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:text="@{optLength}"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            tools:text="@tools:sample/us_zipcodes" />
+                    </TableRow>
+
+                    </TableLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_corner">
+
+                    <ImageButton
+                        android:id="@+id/btnMoreInfo3"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_toEndOf="@id/textView22"
+                        android:backgroundTint="@color/frostee"
+                        android:contentDescription="@string/more_info"
+                        app:srcCompat="@drawable/help2" />
+
+                    <TextView
+                        android:id="@+id/textView22"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:gravity="center_vertical"
+                        android:lines="2"
+                        android:text="@string/maximum_size"
+                        android:textSize="16sp" />
+                </RelativeLayout>
+
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:background="@drawable/rounded_corner"
                     android:padding="5dp">
 
@@ -336,7 +520,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_marginEnd="5dp"
-                            android:text="@string/max_weight"
+                            android:text="@string/weight"
                             android:textSize="16sp" />
 
                         <TextView
@@ -361,7 +545,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_marginEnd="5dp"
-                            android:text="@string/max_length"
+                            android:text="@string/length"
                             android:textSize="16sp" />
 
                         <TextView
@@ -375,36 +559,12 @@
                             tools:text="@tools:sample/first_names" />
                     </TableRow>
 
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:padding="5dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:layout_marginEnd="5dp"
-                            android:text="@string/size"
-                            android:textSize="16sp" />
-
-                        <TextView
-                            android:id="@+id/txtSize"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="2"
-                            android:text="@{size}"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            tools:text="@tools:sample/cities" />
-
-                    </TableRow>
 
                 </TableLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/rounded_corner"
                     android:orientation="vertical"
@@ -604,10 +764,11 @@
                 <com.codebyashish.autoimageslider.AutoImageSlider
                     android:id="@+id/resultSlider"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    app:ais_auto_sliding="false"
+                    android:layout_height="180dp"
+                    app:ais_auto_sliding="true"
                     app:ais_corner_radius="10"
-                    app:ais_indicator_align="CENTER" />
+                    app:ais_indicator_align="CENTER"
+                    app:ais_slide_delay="10" />
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
