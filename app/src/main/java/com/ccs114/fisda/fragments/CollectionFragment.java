@@ -1,30 +1,31 @@
 package com.ccs114.fisda.fragments;
 
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-import java.util.ArrayList;
-
-//Data Binding
-import androidx.databinding.DataBindingUtil;
 
 import com.ccs114.fisda.R;
 import com.ccs114.fisda.activities.MainActivity;
 import com.ccs114.fisda.adapters.CollectionsAdapter;
 import com.ccs114.fisda.database.CollectionsDbHelper;
 import com.ccs114.fisda.databinding.FragmentCollectionBinding;
+
+import java.util.ArrayList;
 
 public class CollectionFragment extends Fragment {
     private CollectionsDbHelper db;
@@ -64,6 +65,18 @@ public class CollectionFragment extends Fragment {
 
         bindData.nonempty.recCollection.setLayoutManager(gridLayoutManager);
         bindData.nonempty.recCollection.setAdapter(collectionsAdapter);
+        collectionsAdapter.setOnItemClickListener(position -> {
+            CollectionsDbHelper dbHelper = new CollectionsDbHelper(getContext());
+            String itemFilename = filename.get(position);
+            dbHelper.deleteOneRow(itemFilename);
+
+            id.remove(position);
+            if (id.size() == 0) {
+                bindData.setShowEmpty(true);
+                bindData.setShowCollections(false);
+            }
+            collectionsAdapter.notifyItemRemoved(position);
+        });
 
         bindData.empty.btnCapture.setOnClickListener(view1 -> {
             FragmentManager manager = requireActivity().getSupportFragmentManager();
@@ -76,7 +89,7 @@ public class CollectionFragment extends Fragment {
         });
 
         bindData.titleToolbar.setOnMenuItemClickListener(item -> {
-            if(item.getItemId()==R.id.toolbar_search) {
+            if (item.getItemId() == R.id.toolbar_search) {
                 MenuItem menuItem = bindData.titleToolbar.getMenu().findItem(R.id.toolbar_search);
                 SearchView searchView = (SearchView) menuItem.getActionView();
                 searchView.setQueryHint("Start typing to search...");
@@ -101,9 +114,32 @@ public class CollectionFragment extends Fragment {
             return false;
         });
 
+        bindData.btnFeedback.setOnClickListener(view1 -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle(R.string.contact_us)
+                    .setMessage(R.string.send_feedback_message)
+                    .setPositiveButton(R.string.send_feedback, ((dialogInterface, i) ->
+                            composeEmail(new String[]{"calambamarymaee@gmail.com", "lampamarkdaniel807@gmail.com"})))
+                    .setNegativeButton(R.string.close, (((dialogInterface, i) -> {
+
+                    })));
+            builder.create();
+            builder.show();
+        });
+
         return view;
 
     }
+
+    private void composeEmail(String[] addresses) {
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+        emailIntent.setData(Uri.parse("mailto:"));
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, addresses);
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "Please attach images for better documentation");
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "FiSDA: User Feedback");
+        startActivity(Intent.createChooser(emailIntent, "Email "));
+    }
+
 
     private void filterData(String query) {
         //implement search filter here
@@ -147,7 +183,7 @@ public class CollectionFragment extends Fragment {
 
     private void storeDataInArrays() {
         Cursor cursor = db.readAllData();
-        if(cursor.getCount() == 0) {
+        if (cursor.getCount() == 0) {
             bindData.setShowEmpty(true);
         } else {
             bindData.setShowCollections(true);
