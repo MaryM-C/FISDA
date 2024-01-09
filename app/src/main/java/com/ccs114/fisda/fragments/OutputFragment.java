@@ -1,5 +1,7 @@
 package com.ccs114.fisda.fragments;
 
+import android.app.AlertDialog;
+import android.app.DialogFragment;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -24,11 +26,15 @@ import com.ccs114.fisda.manager.FishDataManager;
 import com.ccs114.fisda.R;
 import com.ccs114.fisda.database.CollectionsDbHelper;
 import com.ccs114.fisda.models.Fish;
+//import com.ccs114.fisda.utils.FishInfoHelper;
+import com.ccs114.fisda.utils.FishInfoHelper;
 import com.ceylonlabs.imageviewpopup.ImagePopup;
 import com.codebyashish.autoimageslider.Enums.ImageScaleType;
 import com.codebyashish.autoimageslider.ExceptionsClass;
 import com.codebyashish.autoimageslider.Models.ImageSlidesModel;
 import com.squareup.picasso.Picasso;
+
+import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 
@@ -45,10 +51,7 @@ public class OutputFragment extends Fragment {
 
         View view = bindData.getRoot();
         args = getArguments();
-        imagePopup = new ImagePopup(getActivity());
 
-        imagePopup.setHideCloseIcon(true);  // Optional
-        imagePopup.setImageOnClickClose(true);  // Optional
 
         // Retrieve data from the arguments bundle
         if (args != null) {
@@ -91,8 +94,11 @@ public class OutputFragment extends Fragment {
                 manager.popBackStack();
 
             });
+            bindData.description.btnMoreInfo.setOnClickListener(view1 -> openDialog());
+            bindData.description.btnMoreInfo2.setOnClickListener(view1 -> openOptimumDialog());
+            bindData.description.btnMoreInfo3.setOnClickListener(view1 -> openMaximumDialog());
 
-            bindData.imgInputFish.setOnClickListener(view15 -> imagePopup.viewPopup());
+            //bindData.imgInputFish.setOnClickListener(view15 -> imagePopup.viewPopup());
 
             bindData.btnSave.setOnClickListener(view1 -> {
                 CollectionsDbHelper dbHelper = new CollectionsDbHelper(getContext());
@@ -112,6 +118,33 @@ public class OutputFragment extends Fragment {
 
 
         return view;
+    }
+
+    private void openOptimumDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(R.string.optimal_size)
+                .setMessage(R.string.optimal_size_text)
+                .setPositiveButton(R.string.close, ((dialogInterface, i) -> {
+
+                }));
+        builder.create();
+        builder.show();
+    }
+
+    private void openMaximumDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(R.string.maximum_size)
+                .setMessage(R.string.maximum_size_text)
+                .setPositiveButton(R.string.close, ((dialogInterface, i) -> {
+
+                }));
+        builder.create();
+        builder.show();
+    }
+
+    private void openDialog() {
+        MoreInfoDialog dialogFragment = new MoreInfoDialog();
+        dialogFragment.show(requireActivity().getFragmentManager(), "More Info");
     }
 
     private void showDefaultImage() {
@@ -135,98 +168,17 @@ public class OutputFragment extends Fragment {
     }
 
     private void displayFishInfo(String fishName, String confidence) {
-        fishDataManager.getFishData(fishName, new FishDataManager.FishDataListener() {
-            public void onFishDataLoaded(Fish fish) {
-                Picasso.get().load(fish.getMainImage()).fit().into(bindData.imgFishSpecies);
-                //More Images
-                ArrayList<ImageSlidesModel> resultsmodel = new ArrayList<>();
-                try {
-                    resultsmodel.add(new ImageSlidesModel(fish.getImg1(), ""));
-                    resultsmodel.add(new ImageSlidesModel(fish.getImg2(), ""));
-                    resultsmodel.add(new ImageSlidesModel(fish.getImg3(), ""));
-
-                } catch (ExceptionsClass e) {
-                    throw new RuntimeException(e);
-                }
-                bindData.description.resultSlider.setImageList(resultsmodel, ImageScaleType.CENTER_CROP);
-                //TODO: Change the ugly animation
-                bindData.description.resultSlider.setDefaultAnimation();
-
-                bindData.setConfidence(confidence + "%");
-                bindData.description.setEnglishName(fishName);
-
-                Log.d("OutputContent", "Fish name: " + fishName + " confidence: " + confidence + "%" );
-
-                displayBasicInfo(bindData, fish);
-                displayTaxonomy(bindData, fish);
-
-                bindData.description.setShortDescription(fish.getShortDescription());
-
-                displayBioInfo(bindData, fish);
-
-                String imagepath= args.getString("imagePath");
-                Drawable image = new BitmapDrawable(imagepath);
-
-                imagePopup.setWindowHeight(750); // Optional
-                imagePopup.setWindowWidth(900);
-                imagePopup.initiatePopup(image);
-
-            }
-            public void onFishDataNotFound() {
-                Toast.makeText(getContext(), "Fish data not found.", Toast.LENGTH_SHORT).show();
-            }
-            @Override
-            public void onFishDataError(String errorMessage) {
-                Toast.makeText(getContext(), "Fish data not found." + errorMessage, Toast.LENGTH_SHORT).show();
-            }
-
-            private void displayBasicInfo(FragmentOutputBinding bindData, Fish fish) {
-                bindData.description.setLocalName(fish.getLocalName());
-                bindData.description.setCommonName(fish.getCommonName());
-                bindData.description.setEdibility(fish.getEdibility());
-                bindData.description.setCategory(fish.getCategory());
-            }
-
-            private void displayTaxonomy(FragmentOutputBinding bindData, Fish fish) {
-                bindData.description.setVarClass(fish.getTClass());
-                bindData.description.setOrder(fish.getOrder());
-                bindData.description.setFamily(fish.getFamily());
-                bindData.description.setGenus(fish.getGenus());
-                bindData.description.setSciName(fish.getScientificName());
-            }
-
-            private void displayBioInfo(FragmentOutputBinding bindData, Fish fish) {
-                bindData.description.setMaxLength(fish.getMaxLength());
-                bindData.description.setMaxWeight(fish.getMaxWeight());
-                bindData.description.setSize(fish.getSize());
-                bindData.description.setEnvironment(fish.getEnvironment());
-                bindData.description.setTemperature(fish.getTemperature());
-                bindData.description.setDiet(fish.getDiet());
-            }
-        });
+        FishInfoHelper fishInfoHelper = new FishInfoHelper();
+        fishInfoHelper.displayAllInfo(
+                getContext(),
+                bindData,
+                fishName,
+                confidence);
     }
 
     private void displayImage(ImageView imageView) {
         String imagepath = args.getString("imagePath");
-
         Bitmap image = BitmapFactory.decodeFile(imagepath);
-
-        float scaleX = (float) 900 / image.getWidth();
-        float scaleY = (float) 750 / image.getHeight();
-
-        float scale = Math.min(scaleX, scaleY);
-
-        // Create a matrix for the scaling transformation
-        Matrix matrix = new Matrix();
-        matrix.postScale(scale, scale);
-
-        // Create a new Bitmap with the desired dimensions
-        Bitmap resizedImage = Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, true);
-
-        imageView.setImageBitmap(resizedImage);
-
-        Drawable imgDrawable = new BitmapDrawable(resizedImage);
-        bindData.imgInputFish.setImageDrawable(imgDrawable);
-
+        imageView.setImageBitmap(image);
     }
 }
