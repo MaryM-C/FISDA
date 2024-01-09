@@ -242,7 +242,7 @@ public class CaptureFragment extends Fragment {
                 Log.d("ActivityResult", "Failed to retrieve the image.");
             }
         } else {
-            handleActivityResultFailure(data);
+            handleActivityResultFailure(data, requestCode);
         }
 
         super.onActivityResult(requestCode, resultCode, data);
@@ -292,15 +292,13 @@ public class CaptureFragment extends Fragment {
         }
     }
 
-    private void handleActivityResultFailure(Intent data) {
-        if (data == null) {
-            Toast.makeText(getContext(), "Failed to retrieve image data", Toast.LENGTH_LONG).show();
+    private void handleActivityResultFailure(Intent data, int requestCode) {
+        if (data == null && requestCode == REQUEST_CAMERA_PERMISSION) {
+            Toast.makeText(getContext(), "Failed to retrieve image", Toast.LENGTH_LONG).show();
         }
     }
 
     private void prepareImageForDisplay(Uri photoURI) throws IOException {
-        //Todo remove thumbnail
-
         Bitmap image = MediaStore.Images.Media.getBitmap(requireContext().getContentResolver(), photoURI);
         Bitmap testImage = ThumbnailUtils.extractThumbnail(image, imageSize, imageSize);
 
@@ -335,13 +333,12 @@ public class CaptureFragment extends Fragment {
         args.putStringArray("topConfidences", topConfidences);
         args.putString("filename", imageFileName);
 
-        if(handler.computeTopConfidence(handler.getConfidence()) < 0.60) {
-            args.putBoolean("isNotFish", true);
-        }
+//        if(handler.computeTopConfidence(handler.getConfidence()) < 0.40) {
+//            args.putBoolean("isNotFish", true);
+//        }
         return args;
     }
     private int[] classifyImageConcurrent(final OutputHandler handler, final Bitmap image) {
-        long startTime = System.currentTimeMillis();
         int[] topPredictions = new int[3];
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -349,15 +346,12 @@ public class CaptureFragment extends Fragment {
             Future<int[]> future = executor.submit(() -> classifyImage(handler, image));
 
             // Wait for the result with a timeout (adjust the timeout value as needed)
-            topPredictions = future.get(10000, TimeUnit.MILLISECONDS);
+            topPredictions = future.get(30000, TimeUnit.MILLISECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             Log.e("ERROR", "Error during image classification: " + e.getMessage());
         } finally {
             executor.shutdown(); // Shutdown the executor to release resources
         }
-        long endTime = System.currentTimeMillis();
-        long duration = endTime - startTime;
-        Log.d("FunctionTime", "Time taken: " + duration + " milliseconds");
 
         return topPredictions;
     }
