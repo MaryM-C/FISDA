@@ -12,55 +12,85 @@
                     type="Boolean" />
         </data>
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-                <com.google.android.material.appbar.AppBarLayout
-                    android:id="@+id/appBarLayout"
-                    android:layout_width="match_parent"
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/btnFeedback"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@color/transparent"
-                    android:clipChildren="false"
-                    app:elevation="4dp"
+                    android:layout_marginEnd="24dp"
+                    android:layout_marginBottom="24dp"
+                    android:clickable="true"
+                    app:tint="@color/frostee"
+                    android:contentDescription="@string/send_feedback"
+                    app:backgroundTint="@color/cataline_blue"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:srcCompat="@drawable/message"
+                    />
+
+                <LinearLayout
+                    android:id="@+id/linearLayout3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                        <androidx.appcompat.widget.Toolbar
-                            android:id="@+id/title_toolbar"
+                        <com.google.android.material.appbar.AppBarLayout
+                            android:id="@+id/appBarLayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@color/white"
-                            android:elevation="8dp"
-                            android:minHeight="?attr/actionBarSize"
-                            android:theme="?attr/actionBarTheme"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="0.5"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:menu="@menu/title_toolbar">
+                            android:background="@color/transparent"
+                            android:clipChildren="false"
+                            app:elevation="4dp">
 
-                                <ImageView
-                                    android:layout_width="wrap_content"
+                                <androidx.appcompat.widget.Toolbar
+                                    android:id="@+id/title_toolbar"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:contentDescription="@string/app_name"
-                                    android:src="@drawable/fisda" />
+                                    android:background="@color/white"
+                                    android:elevation="8dp"
+                                    android:minHeight="?attr/actionBarSize"
+                                    android:theme="?attr/actionBarTheme"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintHorizontal_bias="0.5"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:menu="@menu/title_toolbar">
 
-                        </androidx.appcompat.widget.Toolbar>
-                </com.google.android.material.appbar.AppBarLayout>
+                                        <ImageView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:contentDescription="@string/app_name"
+                                            android:src="@drawable/fisda" />
 
-                <!--Empty Collection-->
-                <include
-                    android:id="@+id/empty"
-                    layout="@layout/empty_collections"
-                    android:visibility="@{showEmpty ? View.VISIBLE:View.GONE}" />
+                                </androidx.appcompat.widget.Toolbar>
+                        </com.google.android.material.appbar.AppBarLayout>
+                        <!--Empty Collection-->
+                        <include
+                            android:id="@+id/nonempty"
+                            layout="@layout/non_empty_collections"
+                            android:visibility="@{showCollections ? View.VISIBLE:View.GONE}"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/empty" />
 
-                <!--Non Empty Collection-->
-                <include
-                    android:id="@+id/nonempty"
-                    layout="@layout/non_empty_collections"
-                    android:visibility="@{showCollections ? View.VISIBLE:View.GONE}" />
-        </LinearLayout>
+                        <!--Non Empty Collection-->
+                        <include
+                            android:id="@+id/empty"
+                            layout="@layout/empty_collections"
+                            android:visibility="@{showEmpty ? View.VISIBLE:View.GONE}"
+                            app:layout_constraintBottom_toTopOf="@+id/nonempty"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/btnFeedback" />
+                </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
