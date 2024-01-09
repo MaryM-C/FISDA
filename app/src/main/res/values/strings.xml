@@ -4,32 +4,32 @@
 
     <!--Fish Information Labels-->
     <string name="basic_information">Basic Information</string>
-    <string name="english_name">English Name:</string>
-    <string name="common_name">Common Name:</string>
-    <string name="local_name">Local Name:</string>
-    <string name="edibility">Edibility:</string>
-    <string name="category">Category:</string>
+    <string name="english_name">English Name</string>
+    <string name="common_name">Common Name</string>
+    <string name="local_name">Local Name</string>
+    <string name="edibility">Edible</string>
+    <string name="category">Category</string>
 
     <string name="taxonomy">Taxonomy</string>
-    <string name="strClass">Class:</string>
-    <string name="order">Order:</string>
-    <string name="family">Family:</string>
-    <string name="genus">Genus:</string>
-    <string name="scientific_name">Scientific Name:</string>
+    <string name="strClass">Class</string>
+    <string name="order">Order</string>
+    <string name="family">Family</string>
+    <string name="genus">Genus</string>
+    <string name="scientific_name">Scientific Name</string>
 
     <string name="short_description">Short Description</string>
 
     <string name="biological_information">Biological Traits</string>
-    <string name="max_weight">Maximum Weight:</string>
-    <string name="max_length">Maximum Length:</string>
+    <string name="weight">Weight</string>
+    <string name="length">Length</string>
     <string name="temperature">Temperature</string>
     <string name="environment">Environment</string>
-    <string name="size">Average Size:</string>
-    <string name="diet">Diet:</string>
+    <string name="size">Average Length</string>
+    <string name="diet">Diet</string>
     
     <string name="other_images">Other Images</string>
 
-    <string name="confidence">Confidence (%):</string>
+    <string name="confidence">Confidence:</string>
 
     <!--Button Labels-->
     <string name="camera">Camera</string>
@@ -41,7 +41,6 @@
     <string name="noFish">Please try another photo</string>
     <string name="retake">Refer to earlier tips to improve photo quality and try again</string>
 
-
     <!--Menu Action Bar-->
     <string name="search">Search</string>
     <string name="your_collections_is_empty">Your collections is empty</string>
@@ -49,5 +48,49 @@
     <string name="looks_like_you_haven_t_saved_any_photos_yet">Looks like you haven\'t saved any photos yet</string>
     <string name="capture_an_image">Capture an image</string>
     <string name="use_your_camera_or_select_a_photo_from_the_gallery_to_get_started">Use your camera or select a photo from the gallery to get started</string>
+    <string name="iucn_red_list_status">IUCN Red List Status</string>
+    <string name="more_info">More Info</string>
 
+    <!--Custom Dialog-->
+    <string name="titleDialog">IUCN Red List of Threatened Species</string>
+    <string name="close">Close</string>
+    <string name="visit">Visit Site</string>
+    <string name="IUCNdescription"></string>
+    <string name="iucn_red_list_info">
+        <![CDATA[
+        The IUCN Red List of Threatened Species is a global initiative assessing the extinction risk of various organisms, including fish.
+        <br><br>
+        Each species is categorized based on the following criteria
+        <br><br>
+
+        <b>1. Data Deficient (DD)</b> Insufficient data to make an assessment of extinction risk.<br/>
+        <b>2. Least Concern (LC)</b> Species at low risk of extinction.<br/>
+        <b>3. Near Threatened (NT)</b> Species that may become threatened in the near future.<br/>
+        <b>4. Vulnerable (VU)</b> Species likely to become endangered unless conditions improve.<br/>
+        <b>5. Endangered (EN)</b> Species at a very high risk of extinction.<br/>
+        <b>6. Critically Endangered (CR)</b> Species at an extremely high risk of extinction.<br/>
+        <b>7. Extinct in the Wild (EW)</b> Species surviving only in captivity or outside their native range.<br/>
+        <b>8. Extinct (EX)</b> Species no longer in existence.<br/>
+        <b>9. Not Evaluated (NE)</b> Has not yet been evaluated against the criteria.<br/><br>
+
+        ]]>
+    </string>
+    <string name="maximum_size">Maximum Size</string>
+    <string name="optimal_size">Optimal Size</string>
+    <string name="optimal_size_text">Harvesting fish at their ideal size promotes sustainability and population stability.
+    </string>
+    <string name="maximum_size_text">
+        It is the biggest size recorded. Knowing a fish\'s maximum size is vital for conservation, preventing overfishing, and sustainable management.
+    </string>
+    <string name="fish_image">Fish Image</string>
+    <string name="delete_item">Delete Item</string>
+    <string name="send_feedback">Send feedback</string>
+    <string name="send_feedback_message">
+        <![CDATA[
+        We value your feedback! If you have any comments, suggestions, or concerns, please feel free
+         to share them with us via email. Your input helps us improve our services.
+        ]]>
+    </string>
+    <string name="contact_us">Contact Us</string>
+    <string name="email">calambamarymaee@gmail.com</string>
 </resources>
